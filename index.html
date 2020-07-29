@@ -25,6 +25,8 @@
         <h3>First Order Ambisonics</h3>
         <button id="foa-play">Play</button>
         <button id="foa-pause">Pause</button>
+        <button id="foa-setCurrentPosition">Set current position [0:1]</button>
+        <input id="foa-position" size="8" type="text" value="0.4">
       </dt>
       <dd>
         <p>"César Franck" · Organ played by Daniela Niedhammer<br>
@@ -70,7 +72,7 @@
     <h3>TODO</h3>
     <ol>
       <li>Pausing in second and third order</li>
-      <li>Playing from a given time</li>
+      <li>Playing from a given position</li>
       <li>Rotation of the Soundfield</li>
       <li>JSAmbisonics implementation</li>
       <li>Listening tests</li>
@@ -89,18 +91,20 @@
 <script src="players.js"></script>
 
 <script>
-  const foa = new FOAPlayer('sounds/foa.flac');
-  const soa = new HOAPlayer('sounds/soa.flac', 2);
-  const toa = new HOAPlayer('sounds/toa.flac', 3);
+  const foa = new FOAPlayer('sounds/foa.flac')
+  const soa = new HOAPlayer('sounds/soa.flac', 2)
+  const toa = new HOAPlayer('sounds/toa.flac', 3)
 
-  document.getElementById('foa-play').addEventListener('click', foa.play);
-  document.getElementById('foa-pause').addEventListener('click', foa.pause);
+  document.getElementById('foa-play').addEventListener('click', foa.play)
+  document.getElementById('foa-pause').addEventListener('click', foa.pause)
+  document.getElementById('foa-setCurrentPosition').addEventListener('click',
+    function () { foa.currentPosition = document.getElementById('foa-position').value })
 
-  document.getElementById('soa-play').addEventListener('click', soa.play);
-  document.getElementById('soa-stop').addEventListener('click', soa.stop);
+  document.getElementById('soa-play').addEventListener('click', soa.play)
+  document.getElementById('soa-stop').addEventListener('click', soa.stop)
 
-  document.getElementById('toa-play').addEventListener('click', toa.play);
-  document.getElementById('toa-stop').addEventListener('click', toa.stop);
+  document.getElementById('toa-play').addEventListener('click', toa.play)
+  document.getElementById('toa-stop').addEventListener('click', toa.stop)
 </script>
 
 </body>

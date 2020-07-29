@@ -16,6 +16,18 @@ class FOAPlayer extends Player {
     super(src, order)
   }
 
+  set currentPosition (position) {
+    try {
+      if (!this.audioElement) throw 'No audio Element!'
+      if (isNaN(position)
+        || position < 0
+        || position > 1) throw 'Not a floating point number between 0 and 1!'
+      this.audioElement.currentTime = position * this.audioElement.duration
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   initialize = () => {
     this.audioElement = document.createElement('audio')
     this.audioElement.src = this.src
