@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Ambisonics Player</title>
+  <link href="main.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+
+<header>
+  <h1>Generic Ambisonics Player Classes</h1>
+  <h2>Headphones required!</h2>
+  <p>This is an attempt to implement abstract audio player classes, that can handle
+    Ambisonics headphone decoding up to
+    third order. For now the code is based on <a href="https://github.com/GoogleChrome/omnitone" target="_blank">Omnitone</a>,
+    but <a href="https://github.com/polarch/JSAmbisonics">JSAmbisonics</a> will be a second option.</p>
+</header>
+
+<main>
+  <section>
+    <dl>
+      <dt>
+        <h3>First Order Ambisonics</h3>
+        <button id="foa-play">Play</button>
+        <button id="foa-pause">Pause</button>
+      </dt>
+      <dd>
+        <p>"César Franck" · Organ played by Daniela Niedhammer<br>
+          Recording 2004 by <a href="https://gabriel-wolf.de">Gabriel&nbsp;Wolf</a><br>
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0</a></p>
+      </dd>
+    </dl>
+  </section>
+
+  <section>
+    <dl>
+      <dt>
+        <h3>Second Order Ambisonics</h3>
+        <button id="soa-play">Play</button>
+        <button id="soa-stop">Stop</button>
+      </dt>
+      <dd>
+        <p>"Electro" · Synthetically generated Ambisonics<br>
+          Made 2004 with VSpace by <a href="https://gabriel-wolf.de">Gabriel&nbsp;Wolf</a><br>
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0</a></p>
+      </dd>
+    </dl>
+  </section>
+
+  <section>
+    <dl>
+      <dt>
+        <h3>Third Order Ambisonics</h3>
+        <button id="toa-play">Play</button>
+        <button id="toa-stop">Stop</button>
+      </dt>
+      <dd>
+        <p>"Dylanesque" · Acoustic guitar in a large open living room<br>
+          Played by a member of the <a href="https://mhacoustics.com/demos" target="_blank">mh acoustics</a> team<br>
+          © mh acoustics</p>
+      </dd>
+    </dl>
+  </section>
+</main>
+
+<aside class="todo">
+  <div>
+    <h3>TODO</h3>
+    <ol>
+      <li>Pausing in second and third order</li>
+      <li>Playing from a given time</li>
+      <li>Rotation of the Soundfield</li>
+      <li>JSAmbisonics implementation</li>
+      <li>Listening tests</li>
+      <li>Seeking</li>
+    </ol>
+  </div>
+</aside>
+
+<aside class="ambisonics-logo"></aside>
+
+<footer>
+  Made with 🎧 in Berlin
+</footer>
+
+<script src="https://www.gstatic.com/external_hosted/omnitone/build/omnitone.min.js"></script>
+<script src="players.js"></script>
+
+<script>
+  const foa = new FOAPlayer('sounds/foa.flac');
+  const soa = new HOAPlayer('sounds/soa.flac', 2);
+  const toa = new HOAPlayer('sounds/toa.flac', 3);
+
+  document.getElementById('foa-play').addEventListener('click', foa.play);
+  document.getElementById('foa-pause').addEventListener('click', foa.pause);
+
+  document.getElementById('soa-play').addEventListener('click', soa.play);
+  document.getElementById('soa-stop').addEventListener('click', soa.stop);
+
+  document.getElementById('toa-play').addEventListener('click', toa.play);
+  document.getElementById('toa-stop').addEventListener('click', toa.stop);
+</script>
+
+</body>
+</html>
