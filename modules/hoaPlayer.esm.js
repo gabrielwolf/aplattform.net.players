@@ -34,9 +34,7 @@ export default class HOAPlayer extends Player {
   }
 
   play = () => {
-    if (!this.audioContext) {
-      this.initialize()
-    }
+    this.initialize()
     Promise.all([
         this.loadFiles(),
       ],
@@ -50,13 +48,10 @@ export default class HOAPlayer extends Player {
         this.contentBuffer.sampleRate)
 
       let destinationChannelIndex = 0
-      for (let j = 0; j < this.contentBuffer.numberOfChannels; ++j) {
+      for (let i = 0; i < this.contentBuffer.numberOfChannels; ++i) {
         this.contentBuffer2.getChannelData(destinationChannelIndex++).set(
-          this.contentBuffer.getChannelData(j))
+          this.contentBuffer.getChannelData(i).copyWithin(0, 960000, 1920000))
       }
-
-      console.log(this.contentBuffer)
-      console.log(this.contentBuffer2)
 
       this.inputGain.connect(this.hoaRenderer.input)
       this.hoaRenderer.output.connect(this.audioContext.destination)
@@ -67,6 +62,7 @@ export default class HOAPlayer extends Player {
       this.currentBufferSource.start()
       console.log('HOAPlayer playing...')
     })
+
   }
 
   stop = () => {

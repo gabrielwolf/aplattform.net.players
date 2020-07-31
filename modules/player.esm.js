@@ -8,5 +8,4 @@ export class Player {
 
   src = () => this.src
   order = () => this.order
-  play = () => console.log('Player playing...')
 }
