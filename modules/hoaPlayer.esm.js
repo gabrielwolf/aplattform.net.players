@@ -1,6 +1,4 @@
-'use strict'
-
-import Omnitone from '../node_modules/omnitone/build/omnitone.min.esm.js'
+import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
 import { Player } from './player.esm.js'
 
 export default class HOAPlayer extends Player {
@@ -9,16 +7,8 @@ export default class HOAPlayer extends Player {
   }
 
   set currentPosition (position) {
-    try {
-      if (!this.audioContext) throw 'No audioContext!'
-      if (isNaN(position)
-        || position < 0
-        || position > 1) throw 'Not a floating point number between 0 and 1!'
-      this.audioContext.currentTime = position *
-        this.audioContext.duration
-    } catch (e) {
-      console.log(e)
-    }
+    // stub
+    console.log(position)
   }
 
   initialize = () => {
@@ -39,8 +29,7 @@ export default class HOAPlayer extends Player {
       this.src.slice(-5)
     this.fileName2 = this.src.substring(0, this.src.length - 5) + moreChannels +
       this.src.slice(-5)
-    return await Omnitone.createBufferList(
-      this.audioContext,
+    return await Omnitone.createBufferList(this.audioContext,
       [this.fileName1, this.fileName2])
   }
 
@@ -55,16 +44,28 @@ export default class HOAPlayer extends Player {
       this.contentBuffer = Omnitone.mergeBufferListByChannel(
         this.audioContext,
         results[0])
+      this.contentBuffer2 = this.audioContext.createBuffer(
+        this.contentBuffer.numberOfChannels,
+        this.contentBuffer.length,
+        this.contentBuffer.sampleRate)
 
-      this.contentBuffer2 = this.contentBuffer
-      // this.inputGain.connect(this.hoaRenderer.input)
-      // this.hoaRenderer.output.connect(this.audioContext.destination)
-      // this.currentBufferSource = this.audioContext.createBufferSource()
-      // this.currentBufferSource.buffer = this.contentBuffer
-      // this.currentBufferSource.loop = false
-      // this.currentBufferSource.connect(this.inputGain)
-      // this.currentBufferSource.start()
-      // console.log('HOAPlayer playing...')
+      let destinationChannelIndex = 0
+      for (let j = 0; j < this.contentBuffer.numberOfChannels; ++j) {
+        this.contentBuffer2.getChannelData(destinationChannelIndex++).set(
+          this.contentBuffer.getChannelData(j))
+      }
+
+      console.log(this.contentBuffer)
+      console.log(this.contentBuffer2)
+
+      this.inputGain.connect(this.hoaRenderer.input)
+      this.hoaRenderer.output.connect(this.audioContext.destination)
+      this.currentBufferSource = this.audioContext.createBufferSource()
+      this.currentBufferSource.buffer = this.contentBuffer2
+      this.currentBufferSource.loop = false
+      this.currentBufferSource.connect(this.inputGain)
+      this.currentBufferSource.start()
+      console.log('HOAPlayer playing...')
     })
   }
 

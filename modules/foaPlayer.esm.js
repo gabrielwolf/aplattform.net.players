@@ -1,6 +1,4 @@
-'use strict'
-
-import Omnitone from '../node_modules/omnitone/build/omnitone.min.esm.js'
+import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
 import { Player } from './player.esm.js'
 
 export default class FOAPlayer extends Player {
