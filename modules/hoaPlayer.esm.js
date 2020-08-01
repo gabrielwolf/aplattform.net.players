@@ -19,7 +19,7 @@ export default class HOAPlayer extends Player {
     this.hoaRenderer.initialize()
   }
 
-  async loadFiles () {
+  load = () => {
     let moreChannels
     if (this.order === 2)
       moreChannels = '_ch9'
@@ -29,40 +29,36 @@ export default class HOAPlayer extends Player {
       this.src.slice(-5)
     this.fileName2 = this.src.substring(0, this.src.length - 5) + moreChannels +
       this.src.slice(-5)
-    return await Omnitone.createBufferList(this.audioContext,
-      [this.fileName1, this.fileName2])
-  }
-
-  play = () => {
-    this.initialize()
     Promise.all([
-        this.loadFiles(),
-      ],
-    ).then((results) => {
+      Omnitone.createBufferList(this.audioContext,
+        [this.fileName1, this.fileName2]),
+    ]).then((results) => {
       this.contentBuffer = Omnitone.mergeBufferListByChannel(
         this.audioContext,
         results[0])
-      this.contentBuffer2 = this.audioContext.createBuffer(
-        this.contentBuffer.numberOfChannels,
-        this.contentBuffer.length,
-        this.contentBuffer.sampleRate)
-
-      let destinationChannelIndex = 0
-      for (let i = 0; i < this.contentBuffer.numberOfChannels; ++i) {
-        this.contentBuffer2.getChannelData(destinationChannelIndex++).set(
-          this.contentBuffer.getChannelData(i).copyWithin(0, 960000, 1920000))
-      }
-
-      this.inputGain.connect(this.hoaRenderer.input)
-      this.hoaRenderer.output.connect(this.audioContext.destination)
-      this.currentBufferSource = this.audioContext.createBufferSource()
-      this.currentBufferSource.buffer = this.contentBuffer2
-      this.currentBufferSource.loop = false
-      this.currentBufferSource.connect(this.inputGain)
-      this.currentBufferSource.start()
-      console.log('HOAPlayer playing...')
     })
+  }
 
+  play = () => {
+    this.playbackContentBuffer = this.audioContext.createBuffer(
+      this.contentBuffer.numberOfChannels,
+      this.contentBuffer.length,
+      this.contentBuffer.sampleRate)
+
+    let destinationChannelIndex = 0
+    for (let i = 0; i < this.contentBuffer.numberOfChannels; ++i) {
+      this.playbackContentBuffer.getChannelData(destinationChannelIndex++).set(
+        this.contentBuffer.getChannelData(i).copyWithin(0, 960000, 1920000))
+    }
+
+    this.inputGain.connect(this.hoaRenderer.input)
+    this.hoaRenderer.output.connect(this.audioContext.destination)
+    this.currentBufferSource = this.audioContext.createBufferSource()
+    this.currentBufferSource.buffer = this.playbackContentBuffer
+    this.currentBufferSource.loop = false
+    this.currentBufferSource.connect(this.inputGain)
+    this.currentBufferSource.start()
+    console.log('HOAPlayer playing...')
   }
 
   stop = () => {
