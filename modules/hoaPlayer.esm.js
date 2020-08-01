@@ -40,32 +40,21 @@ export default class HOAPlayer extends Player {
       this.currentBufferSource.stop()
       this.currentBufferSource.disconnect()
     }
-
-    this.playbackContentBuffer = this.audioContext.createBuffer(
-      this.contentBuffer.numberOfChannels,
-      (1 - from) * this.contentBuffer.length,
-      this.contentBuffer.sampleRate)
-
-    for (let i = 0; i < this.contentBuffer.numberOfChannels; ++i) {
-      const actualChannelSlice = this.contentBuffer.getChannelData(i).
-        slice(from * this.contentBuffer.length, this.contentBuffer.length)
-      for (let j = 0; j < actualChannelSlice.length; ++j) {
-        this.playbackContentBuffer.getChannelData(i)[j] = actualChannelSlice[j]
-      }
-    }
-
     this.inputGain.connect(this.hoaRenderer.input)
     this.hoaRenderer.output.connect(this.audioContext.destination)
     this.currentBufferSource = this.audioContext.createBufferSource()
-    this.currentBufferSource.buffer = this.playbackContentBuffer
+    this.currentBufferSource.buffer = this.contentBuffer
     this.currentBufferSource.loop = false
     this.currentBufferSource.connect(this.inputGain)
-    this.currentBufferSource.start()
+    this.currentBufferSource.start(0,
+      from * this.contentBuffer.length / this.contentBuffer.sampleRate)
     console.log('HOAPlayer playing...')
   }
 
   stop = () => {
-    this.currentBufferSource.stop()
-    this.currentBufferSource.disconnect()
+    if (this.currentBufferSource) {
+      this.currentBufferSource.stop()
+      this.currentBufferSource.disconnect()
+    }
   }
 }
