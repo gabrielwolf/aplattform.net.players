@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <title>Ambisonics Player</title>
-  <link href="mains.css" rel="stylesheet" type="text/css">
+  <link href="main.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
@@ -43,8 +43,8 @@
         <button id="soa-init">Init</button>
         <button id="soa-load">Load</button>
         <button id="soa-play">Play</button>
+        <input id="soa-position" size="4" type="text" value="0.4">
         <button id="soa-stop">Stop</button>
-        <input id="soa-position" size="4" type="text" value="0">
       </dt>
       <dd>
         <p>"Electro" · Synthetically generated Ambisonics<br>
@@ -58,7 +58,10 @@
     <dl>
       <dt>
         <h3>Third Order Ambisonics</h3>
+        <button id="toa-init">Init</button>
+        <button id="toa-load">Load</button>
         <button id="toa-play">Play</button>
+        <input id="toa-position" size="4" type="text" value="0.4">
         <button id="toa-stop">Stop</button>
       </dt>
       <dd>
@@ -75,7 +78,6 @@
     <h3>TODO</h3>
     <ol>
       <li>Pausing in second and third order</li>
-      <li>Playing from a given position</li>
       <li>Rotation of the Soundfield</li>
       <li>JSAmbisonics implementation</li>
       <li>Listening tests</li>
