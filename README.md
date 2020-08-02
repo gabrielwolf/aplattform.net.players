@@ -8,7 +8,9 @@ This is an attempt to implement abstract audio player classes, that can handle A
 TODO
 ----
 
-1. Rotation of the Soundfield
-2. JSAmbisonics implementation
-3. Listening tests
-4. Seeking
+1. Get playback position
+2. Set gain
+3. Rotation of the Soundfield
+4. JSAmbisonics implementation
+5. Listening tests
+6. Seeking
