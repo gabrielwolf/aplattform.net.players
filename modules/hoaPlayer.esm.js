@@ -51,6 +51,13 @@ export default class HOAPlayer extends Player {
     console.log('HOAPlayer playing...')
   }
 
+  pause = () => {
+    if (this.currentBufferSource.playbackRate.value === 1)
+      this.currentBufferSource.playbackRate.value = 0
+    else if (this.currentBufferSource.playbackRate.value === 0)
+      this.currentBufferSource.playbackRate.value = 1
+  }
+
   stop = () => {
     if (this.currentBufferSource) {
       this.currentBufferSource.stop()

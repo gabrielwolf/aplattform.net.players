@@ -24,6 +24,8 @@ document.getElementById('soa-play').
   addEventListener('click', function () {
     soa.play(document.getElementById('soa-position').value)
   })
+document.getElementById('soa-pause').
+  addEventListener('click', soa.pause)
 document.getElementById('soa-stop').
   addEventListener('click', soa.stop)
 
@@ -36,5 +38,7 @@ document.getElementById('toa-play').
   addEventListener('click', function () {
     toa.play(document.getElementById('toa-position').value)
   })
+document.getElementById('toa-pause').
+  addEventListener('click', toa.pause)
 document.getElementById('toa-stop').
   addEventListener('click', toa.stop)

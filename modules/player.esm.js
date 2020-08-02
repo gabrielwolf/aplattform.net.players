@@ -1,5 +1,3 @@
-'use strict'
-
 export class Player {
   constructor (src, order) {
     this.src = src
