@@ -1,19 +1,22 @@
 import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
 
 export default class OmnitonePlayer {
-  constructor (src, order) {
+  constructor (src, order, channelMap) {
     this.src = src
     this.order = order
+    this.channelMap = channelMap
   }
 
   src = () => this.src
   order = () => this.order
+  channelMap = () => this.channelMap
 
   initialize = () => {
     this.audioContext = new AudioContext()
     this.inputGain = this.audioContext.createGain()
     if (this.order === 1) {
-      this.ambisonicsRenderer = Omnitone.createFOARenderer(this.audioContext)
+      this.ambisonicsRenderer = Omnitone.createFOARenderer(this.audioContext,
+        { channelMap: this.channelMap })
     } else if (this.order === 2 || this.order === 3) {
       this.ambisonicsRenderer = Omnitone.createHOARenderer(this.audioContext,
         { ambisonicOrder: this.order })

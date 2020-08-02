@@ -1,6 +1,6 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-const foa = new OmnitonePlayer('sounds/foa.flac', 1)
+const foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
 const soa = new OmnitonePlayer('sounds/soa.flac', 2)
 const toa = new OmnitonePlayer('sounds/toa.flac', 3)
 
