@@ -1,19 +1,22 @@
-import FOAPlayer from './modules/foaPlayer.esm.js'
-import HOAPlayer from './modules/hoaPlayer.esm.js'
+import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-const foa = new FOAPlayer('sounds/foa.flac')
-const soa = new HOAPlayer('sounds/soa.flac', 2)
-const toa = new HOAPlayer('sounds/toa.flac', 3)
+const foa = new OmnitonePlayer('sounds/foa.flac', 1)
+const soa = new OmnitonePlayer('sounds/soa.flac', 2)
+const toa = new OmnitonePlayer('sounds/toa.flac', 3)
 
 // FOA
+document.getElementById('foa-init').
+  addEventListener('click', foa.initialize)
+document.getElementById('foa-load').
+  addEventListener('click', foa.load)
 document.getElementById('foa-play').
-  addEventListener('click', foa.play)
+  addEventListener('click', function () {
+    foa.play(document.getElementById('foa-position').value)
+  })
 document.getElementById('foa-pause').
   addEventListener('click', foa.pause)
-document.getElementById('foa-setCurrentPosition').
-  addEventListener('click', function () {
-    foa.currentPosition = document.getElementById('foa-position').value
-  })
+document.getElementById('foa-stop').
+  addEventListener('click', foa.stop)
 
 // SOA
 document.getElementById('soa-init').

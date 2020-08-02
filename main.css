@@ -29,49 +29,49 @@ body {
 
 @-webkit-keyframes AnimationBG {
     0% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
     50% {
         background-position: 100% 36%
     }
     100% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
 }
 
 @-moz-keyframes AnimationBG {
     0% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
     50% {
         background-position: 100% 36%
     }
     100% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
 }
 
 @-o-keyframes AnimationBG {
     0% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
     50% {
         background-position: 100% 36%
     }
     100% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
 }
 
 @keyframes AnimationBG {
     0% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
     50% {
         background-position: 100% 36%
     }
     100% {
-        background-position: 0% 65%
+        background-position: 0 65%
     }
 }
 
@@ -136,7 +136,7 @@ main {
 }
 
 main h3 {
-    margin: 0rem 0 2rem 0;
+    margin: 0 0 2rem 0;
 }
 
 main > section > dl {
