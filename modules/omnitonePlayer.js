@@ -5,11 +5,21 @@ export default class OmnitonePlayer {
     this.src = src
     this.order = order
     this.channelMap = channelMap
+    this.playingStartedAtTimeInMilliseconds = 0
+    this.playedFromPosition = .0
+    this.elapsedTimeInMilliSeconds = 0
+    this.durationInSeconds = 0
   }
 
-  src = () => this.src
-  order = () => this.order
-  channelMap = () => this.channelMap
+  get getElapsedTimeInSeconds () {
+    return this.elapsedTimeInMilliSeconds / 1000
+  }
+
+  calcElapsed = () => {
+    this.offset = this.playedFromPosition * this.durationInSeconds
+    this.elapsedTimeInMilliSeconds = Date.now() -
+      this.playingStartedAtTimeInMilliseconds + this.offset * 1000
+  }
 
   initialize = () => {
     this.audioContext = new AudioContext()
@@ -22,11 +32,14 @@ export default class OmnitonePlayer {
         { ambisonicOrder: this.order })
     }
     this.ambisonicsRenderer.initialize()
+    this.inputGain.connect(this.ambisonicsRenderer.input)
+    this.ambisonicsRenderer.output.connect(this.audioContext.destination)
   }
 
   load = () => {
     this.listOfFileNames = []
     let file1, file2
+
     switch (this.order) {
       case 1:
         Promise.all([
@@ -36,8 +49,11 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
+          this.durationInSeconds = this.contentBuffer.length /
+            this.contentBuffer.sampleRate
         })
         break
+
       case 2:
         file1 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
@@ -45,8 +61,10 @@ export default class OmnitonePlayer {
         file2 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
           + '_ch9' + '.' + this.src.split('.').pop()
+
         this.listOfFileNames.push(file1)
         this.listOfFileNames.push(file2)
+
         Promise.all([
           Omnitone.createBufferList(this.audioContext,
             [this.listOfFileNames[0], this.listOfFileNames[1]]),
@@ -54,8 +72,11 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
+          this.durationInSeconds = this.contentBuffer.length /
+            this.contentBuffer.sampleRate
         })
         break
+
       case 3:
         file1 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
@@ -63,8 +84,10 @@ export default class OmnitonePlayer {
         file2 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
           + '_ch9-16' + '.' + this.src.split('.').pop()
+
         this.listOfFileNames.push(file1)
         this.listOfFileNames.push(file2)
+
         Promise.all([
           Omnitone.createBufferList(this.audioContext,
             [this.listOfFileNames[0], this.listOfFileNames[1]]),
@@ -72,6 +95,8 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
+          this.durationInSeconds = this.contentBuffer.length /
+            this.contentBuffer.sampleRate
         })
         break
     }
@@ -82,26 +107,23 @@ export default class OmnitonePlayer {
       this.currentBufferSource.stop()
       this.currentBufferSource.disconnect()
     }
-    this.inputGain.connect(this.ambisonicsRenderer.input)
-    this.ambisonicsRenderer.output.connect(this.audioContext.destination)
     this.currentBufferSource = this.audioContext.createBufferSource()
     this.currentBufferSource.buffer = this.contentBuffer
     this.currentBufferSource.loop = false
     this.currentBufferSource.connect(this.inputGain)
+    this.playingStartedAtTimeInMilliseconds = Date.now()
+    this.playedFromPosition = parseFloat(from)
+    if (this.calcElapsedHandler)
+      clearInterval(this.calcElapsedHandler)
+    this.calcElapsedHandler = setInterval(() => this.calcElapsed(), 1)
     this.currentBufferSource.start(0,
-      from * this.contentBuffer.length / this.contentBuffer.sampleRate)
+      from * this.durationInSeconds)
     console.log('HOAPlayer playing...')
-  }
-
-  pause = () => {
-    if (this.currentBufferSource.playbackRate.value === 1)
-      this.currentBufferSource.playbackRate.value = 0
-    else if (this.currentBufferSource.playbackRate.value === 0)
-      this.currentBufferSource.playbackRate.value = 1
   }
 
   stop = () => {
     if (this.currentBufferSource) {
+      clearInterval(this.calcElapsedHandler)
       this.currentBufferSource.stop()
       this.currentBufferSource.disconnect()
     }

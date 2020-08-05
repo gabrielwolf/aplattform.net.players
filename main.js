@@ -1,47 +1,68 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-const foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
-const soa = new OmnitonePlayer('sounds/soa.flac', 2)
-const toa = new OmnitonePlayer('sounds/toa.flac', 3)
+window.foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
+window.soa = new OmnitonePlayer('sounds/soa.flac', 2)
+window.toa = new OmnitonePlayer('sounds/toa.flac', 3)
 
 // FOA
 document.getElementById('foa-init').
-  addEventListener('click', foa.initialize)
+  addEventListener('click', window.foa.initialize)
 document.getElementById('foa-load').
-  addEventListener('click', foa.load)
+  addEventListener('click', window.foa.load)
 document.getElementById('foa-play').
   addEventListener('click', function () {
-    foa.play(document.getElementById('foa-position').value)
+    window.foa.play(document.getElementById('foa-position').value)
   })
-document.getElementById('foa-pause').
-  addEventListener('click', foa.pause)
 document.getElementById('foa-stop').
-  addEventListener('click', foa.stop)
+  addEventListener('click', window.foa.stop)
+document.getElementById('foa-update').
+  addEventListener('click', function () {
+    document.getElementById(
+      'foa-progress').max = window.foa.durationInSeconds
+    setInterval(() => {
+      document.getElementById(
+        'foa-progress').value = window.foa.getElapsedTimeInSeconds
+    }, 1)
+  })
 
 // SOA
 document.getElementById('soa-init').
-  addEventListener('click', soa.initialize)
+  addEventListener('click', window.soa.initialize)
 document.getElementById('soa-load').
-  addEventListener('click', soa.load)
+  addEventListener('click', window.soa.load)
 document.getElementById('soa-play').
   addEventListener('click', function () {
-    soa.play(document.getElementById('soa-position').value)
+    window.soa.play(document.getElementById('soa-position').value)
   })
-document.getElementById('soa-pause').
-  addEventListener('click', soa.pause)
 document.getElementById('soa-stop').
-  addEventListener('click', soa.stop)
+  addEventListener('click', window.soa.stop)
+document.getElementById('soa-update').
+  addEventListener('click', function () {
+    document.getElementById(
+      'soa-progress').max = window.soa.durationInSeconds
+    setInterval(() => {
+      document.getElementById(
+        'soa-progress').value = window.soa.getElapsedTimeInSeconds
+    }, 100)
+  })
 
 // TOA
 document.getElementById('toa-init').
-  addEventListener('click', toa.initialize)
+  addEventListener('click', window.toa.initialize)
 document.getElementById('toa-load').
-  addEventListener('click', toa.load)
+  addEventListener('click', window.toa.load)
 document.getElementById('toa-play').
   addEventListener('click', function () {
-    toa.play(document.getElementById('toa-position').value)
+    window.toa.play(document.getElementById('toa-position').value)
   })
-document.getElementById('toa-pause').
-  addEventListener('click', toa.pause)
 document.getElementById('toa-stop').
-  addEventListener('click', toa.stop)
+  addEventListener('click', window.toa.stop)
+document.getElementById('toa-update').
+  addEventListener('click', function () {
+    document.getElementById(
+      'toa-progress').max = window.toa.durationInSeconds
+    setInterval(() => {
+      document.getElementById(
+        'toa-progress').value = window.toa.getElapsedTimeInSeconds
+    }, 100)
+  })
