@@ -5,7 +5,7 @@ export default class OmnitonePlayer {
     this.src = src
     this.order = order
     this.channelMap = channelMap
-    this.playingStartedAtTimeInMilliseconds = 0
+    this.playbackStartedAtTimeInMilliseconds = 0
     this.playedFromPosition = .0
     this.elapsedTimeInMilliSeconds = 0
     this.durationInSeconds = 0
@@ -15,10 +15,10 @@ export default class OmnitonePlayer {
     return this.elapsedTimeInMilliSeconds / 1000
   }
 
-  calcElapsed = () => {
-    this.offset = this.playedFromPosition * this.durationInSeconds
+  updateElapsedTimeInMilliSeconds = () => {
+    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
     this.elapsedTimeInMilliSeconds = Date.now() -
-      this.playingStartedAtTimeInMilliseconds + this.offset * 1000
+      this.playbackStartedAtTimeInMilliseconds + this.offset
   }
 
   initialize = () => {
@@ -111,11 +111,12 @@ export default class OmnitonePlayer {
     this.currentBufferSource.buffer = this.contentBuffer
     this.currentBufferSource.loop = false
     this.currentBufferSource.connect(this.inputGain)
-    this.playingStartedAtTimeInMilliseconds = Date.now()
+    this.playbackStartedAtTimeInMilliseconds = Date.now()
     this.playedFromPosition = parseFloat(from)
     if (this.calcElapsedHandler)
       clearInterval(this.calcElapsedHandler)
-    this.calcElapsedHandler = setInterval(() => this.calcElapsed(), 10)
+    this.calcElapsedHandler = setInterval(
+      () => this.updateElapsedTimeInMilliSeconds(), 10)
     this.currentBufferSource.start(0,
       from * this.durationInSeconds)
     if (this.order === 1)
