@@ -11,8 +11,12 @@ export default class OmnitonePlayer {
     this.durationInSeconds = 0
   }
 
-  get getElapsedTimeInSeconds () {
+  get elapsedTimeInSeconds () {
     return this.elapsedTimeInMilliSeconds / 1000
+  }
+
+  set gain (gain) {
+    this.inputGain.gain.value = Math.pow(10, parseFloat(gain) / 20)
   }
 
   updateElapsedTimeInMilliSeconds = () => {

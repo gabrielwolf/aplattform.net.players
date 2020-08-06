@@ -23,8 +23,14 @@ document.getElementById('foa-update').
       'foa-progress').max = window.foa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'foa-progress').value = window.foa.getElapsedTimeInSeconds
+        'foa-progress').value = window.foa.elapsedTimeInSeconds
     }, 1)
+  })
+document.getElementById('foa-gain').
+  addEventListener('input', (event) => {
+    let gain = document.getElementById('foa-gain').value
+    document.getElementById('foa-gain-label').textContent = gain
+    window.foa.gain = gain
   })
 
 // SOA
@@ -46,8 +52,14 @@ document.getElementById('soa-update').
       'soa-progress').max = window.soa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'soa-progress').value = window.soa.getElapsedTimeInSeconds
+        'soa-progress').value = window.soa.elapsedTimeInSeconds
     }, 100)
+  })
+document.getElementById('soa-gain').
+  addEventListener('input', (event) => {
+    let gain = document.getElementById('soa-gain').value
+    document.getElementById('soa-gain-label').textContent = gain
+    window.soa.gain = gain
   })
 
 // TOA
@@ -69,6 +81,12 @@ document.getElementById('toa-update').
       'toa-progress').max = window.toa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'toa-progress').value = window.toa.getElapsedTimeInSeconds
+        'toa-progress').value = window.toa.elapsedTimeInSeconds
     }, 100)
+  })
+document.getElementById('toa-gain').
+  addEventListener('input', (event) => {
+    let gain = document.getElementById('toa-gain').value
+    document.getElementById('toa-gain-label').textContent = gain
+    window.toa.gain = gain
   })
