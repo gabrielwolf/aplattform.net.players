@@ -115,10 +115,13 @@ export default class OmnitonePlayer {
     this.playedFromPosition = parseFloat(from)
     if (this.calcElapsedHandler)
       clearInterval(this.calcElapsedHandler)
-    this.calcElapsedHandler = setInterval(() => this.calcElapsed(), 1)
+    this.calcElapsedHandler = setInterval(() => this.calcElapsed(), 10)
     this.currentBufferSource.start(0,
       from * this.durationInSeconds)
-    console.log('HOAPlayer playing...')
+    if (this.order === 1)
+      console.log('FOAPlayer playing...')
+    else if (this.order === 2 || this.order === 3)
+      console.log('HOAPlayer playing...')
   }
 
   stop = () => {
@@ -127,5 +130,9 @@ export default class OmnitonePlayer {
       this.currentBufferSource.stop()
       this.currentBufferSource.disconnect()
     }
+  }
+
+  resume = () => {
+    this.play((this.elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds)
   }
 }

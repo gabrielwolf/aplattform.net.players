@@ -15,6 +15,8 @@ document.getElementById('foa-play').
   })
 document.getElementById('foa-stop').
   addEventListener('click', window.foa.stop)
+document.getElementById('foa-resume').
+  addEventListener('click', window.foa.resume)
 document.getElementById('foa-update').
   addEventListener('click', function () {
     document.getElementById(
@@ -36,6 +38,8 @@ document.getElementById('soa-play').
   })
 document.getElementById('soa-stop').
   addEventListener('click', window.soa.stop)
+document.getElementById('soa-resume').
+  addEventListener('click', window.soa.resume)
 document.getElementById('soa-update').
   addEventListener('click', function () {
     document.getElementById(
@@ -57,6 +61,8 @@ document.getElementById('toa-play').
   })
 document.getElementById('toa-stop').
   addEventListener('click', window.toa.stop)
+document.getElementById('toa-resume').
+  addEventListener('click', window.toa.resume)
 document.getElementById('toa-update').
   addEventListener('click', function () {
     document.getElementById(
