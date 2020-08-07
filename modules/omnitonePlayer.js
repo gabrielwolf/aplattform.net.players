@@ -38,12 +38,6 @@ export default class OmnitonePlayer {
     return a
   }
 
-  updateElapsedTimeInMilliSeconds = () => {
-    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
-    this.elapsedTimeInMilliSeconds = Date.now() -
-      this.playbackStartedAtTimeInMilliseconds + this.offset
-  }
-
   initialize = () => {
     this.audioContext = new AudioContext()
     this.inputGain = this.audioContext.createGain()
@@ -127,8 +121,7 @@ export default class OmnitonePlayer {
 
   play = (from) => {
     if (this.currentBufferSource) {
-      this.currentBufferSource.stop()
-      this.currentBufferSource.disconnect()
+      this.clearCurrentBufferSource()
     }
     this.currentBufferSource = this.audioContext.createBufferSource()
     this.currentBufferSource.buffer = this.contentBuffer
@@ -146,13 +139,15 @@ export default class OmnitonePlayer {
       console.log('FOAPlayer playing...')
     else if (this.order === 2 || this.order === 3)
       console.log('HOAPlayer playing...')
+    this.currentBufferSource.onended = () => {
+      // TODO clear elapsed time and clear setInterval
+    }
   }
 
   stop = () => {
     if (this.currentBufferSource) {
       clearInterval(this.calcElapsedHandler)
-      this.currentBufferSource.stop()
-      this.currentBufferSource.disconnect()
+      this.clearCurrentBufferSource()
     }
   }
 
@@ -188,5 +183,16 @@ export default class OmnitonePlayer {
     rotationMatrix3[8] = forward[2]
 
     this.ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
+  }
+
+  updateElapsedTimeInMilliSeconds = () => {
+    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
+    this.elapsedTimeInMilliSeconds = Date.now() -
+      this.playbackStartedAtTimeInMilliseconds + this.offset
+  }
+
+  clearCurrentBufferSource = () => {
+    this.currentBufferSource.stop()
+    this.currentBufferSource.disconnect()
   }
 }
