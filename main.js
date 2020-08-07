@@ -1,92 +1,152 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-window.foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
-window.soa = new OmnitonePlayer('sounds/soa.flac', 2)
-window.toa = new OmnitonePlayer('sounds/toa.flac', 3)
+const foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
+const soa = new OmnitonePlayer('sounds/soa.flac', 2)
+const toa = new OmnitonePlayer('sounds/toa.flac', 3)
 
 // FOA
 document.getElementById('foa-init').
-  addEventListener('click', window.foa.initialize)
+  addEventListener('click', foa.initialize)
 document.getElementById('foa-load').
-  addEventListener('click', window.foa.load)
+  addEventListener('click', foa.load)
 document.getElementById('foa-play').
   addEventListener('click', function () {
-    window.foa.play(document.getElementById('foa-position').value)
+    foa.play(document.getElementById('foa-position').value)
   })
 document.getElementById('foa-stop').
-  addEventListener('click', window.foa.stop)
+  addEventListener('click', foa.stop)
 document.getElementById('foa-resume').
-  addEventListener('click', window.foa.resume)
+  addEventListener('click', foa.resume)
 document.getElementById('foa-update').
   addEventListener('click', function () {
     document.getElementById(
-      'foa-progress').max = window.foa.durationInSeconds
+      'foa-progress').max = foa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'foa-progress').value = window.foa.elapsedTimeInSeconds
+        'foa-progress').value = foa.elapsedTimeInSeconds
     }, 1)
   })
 document.getElementById('foa-gain').
   addEventListener('input', (event) => {
-    let gain = document.getElementById('foa-gain').value
+    const gain = document.getElementById('foa-gain').value
     document.getElementById('foa-gain-label').textContent = gain
-    window.foa.gain = gain
+    foa.gain = gain
+  })
+document.getElementById('foa-azimuth').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('foa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('foa-elevation').value)
+    document.getElementById('foa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('foa-elevation-label').
+      textContent = String(elevation)
+    foa.rotateSoundfield(azimuth, elevation)
+  })
+document.getElementById('foa-elevation').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('foa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('foa-elevation').value)
+    document.getElementById('foa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('foa-elevation-label').
+      textContent = String(elevation)
+    foa.rotateSoundfield(azimuth, elevation)
   })
 
 // SOA
 document.getElementById('soa-init').
-  addEventListener('click', window.soa.initialize)
+  addEventListener('click', soa.initialize)
 document.getElementById('soa-load').
-  addEventListener('click', window.soa.load)
+  addEventListener('click', soa.load)
 document.getElementById('soa-play').
   addEventListener('click', function () {
-    window.soa.play(document.getElementById('soa-position').value)
+    soa.play(document.getElementById('soa-position').value)
   })
 document.getElementById('soa-stop').
-  addEventListener('click', window.soa.stop)
+  addEventListener('click', soa.stop)
 document.getElementById('soa-resume').
-  addEventListener('click', window.soa.resume)
+  addEventListener('click', soa.resume)
 document.getElementById('soa-update').
   addEventListener('click', function () {
     document.getElementById(
-      'soa-progress').max = window.soa.durationInSeconds
+      'soa-progress').max = soa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'soa-progress').value = window.soa.elapsedTimeInSeconds
+        'soa-progress').value = soa.elapsedTimeInSeconds
     }, 100)
   })
 document.getElementById('soa-gain').
   addEventListener('input', (event) => {
-    let gain = document.getElementById('soa-gain').value
+    const gain = document.getElementById('soa-gain').value
     document.getElementById('soa-gain-label').textContent = gain
-    window.soa.gain = gain
+    soa.gain = gain
+  })
+document.getElementById('soa-azimuth').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('soa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('soa-elevation').value)
+    document.getElementById('soa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('soa-elevation-label').
+      textContent = String(elevation)
+    soa.rotateSoundfield(azimuth, elevation)
+  })
+document.getElementById('soa-elevation').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('soa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('soa-elevation').value)
+    document.getElementById('soa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('soa-elevation-label').
+      textContent = String(elevation)
+    soa.rotateSoundfield(azimuth, elevation)
   })
 
 // TOA
 document.getElementById('toa-init').
-  addEventListener('click', window.toa.initialize)
+  addEventListener('click', toa.initialize)
 document.getElementById('toa-load').
-  addEventListener('click', window.toa.load)
+  addEventListener('click', toa.load)
 document.getElementById('toa-play').
   addEventListener('click', function () {
-    window.toa.play(document.getElementById('toa-position').value)
+    toa.play(document.getElementById('toa-position').value)
   })
 document.getElementById('toa-stop').
-  addEventListener('click', window.toa.stop)
+  addEventListener('click', toa.stop)
 document.getElementById('toa-resume').
-  addEventListener('click', window.toa.resume)
+  addEventListener('click', toa.resume)
 document.getElementById('toa-update').
   addEventListener('click', function () {
     document.getElementById(
-      'toa-progress').max = window.toa.durationInSeconds
+      'toa-progress').max = toa.durationInSeconds
     setInterval(() => {
       document.getElementById(
-        'toa-progress').value = window.toa.elapsedTimeInSeconds
+        'toa-progress').value = toa.elapsedTimeInSeconds
     }, 100)
   })
 document.getElementById('toa-gain').
   addEventListener('input', (event) => {
-    let gain = document.getElementById('toa-gain').value
+    const gain = document.getElementById('toa-gain').value
     document.getElementById('toa-gain-label').textContent = gain
-    window.toa.gain = gain
+    toa.gain = gain
+  })
+document.getElementById('toa-azimuth').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('toa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('toa-elevation').value)
+    document.getElementById('toa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('toa-elevation-label').
+      textContent = String(elevation)
+    toa.rotateSoundfield(azimuth, elevation)
+  })
+document.getElementById('toa-elevation').
+  addEventListener('input', (event) => {
+    const azimuth = parseFloat(document.getElementById('toa-azimuth').value)
+    const elevation = parseFloat(document.getElementById('toa-elevation').value)
+    document.getElementById('toa-azimuth-label').
+      textContent = String(azimuth)
+    document.getElementById('toa-elevation-label').
+      textContent = String(elevation)
+    toa.rotateSoundfield(azimuth, elevation)
   })
