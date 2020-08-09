@@ -74,10 +74,10 @@ export default class OmnitonePlayer {
       case 2:
         file1 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch1-8' + '.' + this.src.split('.').pop()
+          + '_ch0-7' + '.' + this.src.split('.').pop()
         file2 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch9' + '.' + this.src.split('.').pop()
+          + '_ch8' + '.' + this.src.split('.').pop()
 
         this.listOfFileNames.push(file1)
         this.listOfFileNames.push(file2)
@@ -97,10 +97,10 @@ export default class OmnitonePlayer {
       case 3:
         file1 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch1-8' + '.' + this.src.split('.').pop()
+          + '_ch0-7' + '.' + this.src.split('.').pop()
         file2 = this.src.substring(0,
           this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch9-16' + '.' + this.src.split('.').pop()
+          + '_ch8-15' + '.' + this.src.split('.').pop()
 
         this.listOfFileNames.push(file1)
         this.listOfFileNames.push(file2)
