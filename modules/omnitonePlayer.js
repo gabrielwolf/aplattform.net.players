@@ -38,13 +38,30 @@ export default class OmnitonePlayer {
     return a
   }
 
+  updateElapsedTimeInMilliSeconds = () => {
+    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
+    this.elapsedTimeInMilliSeconds = Date.now() -
+      this.playbackStartedAtTimeInMilliseconds + this.offset
+  }
+
+  clearCurrentBufferSource = () => {
+    this.currentBufferSource.stop()
+    this.currentBufferSource.disconnect()
+  }
+
+  finalizeLoading = () => {
+    this.durationInSeconds = this.contentBuffer.length /
+      this.contentBuffer.sampleRate
+    this.rotateSoundfield(0, 0)
+  }
+
   initialize = () => {
     this.audioContext = new AudioContext()
     this.inputGain = this.audioContext.createGain()
     if (this.order === 1) {
       this.ambisonicsRenderer = Omnitone.createFOARenderer(this.audioContext,
         { channelMap: this.channelMap })
-    } else if (this.order === 2 || this.order === 3) {
+    } else if (this.order > 1) {
       this.ambisonicsRenderer = Omnitone.createHOARenderer(this.audioContext,
         { ambisonicOrder: this.order })
     }
@@ -66,8 +83,8 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
-          this.durationInSeconds = this.contentBuffer.length /
-            this.contentBuffer.sampleRate
+        }).then(() => {
+          this.finalizeLoading()
         })
         break
 
@@ -89,8 +106,8 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
-          this.durationInSeconds = this.contentBuffer.length /
-            this.contentBuffer.sampleRate
+        }).then(() => {
+          this.finalizeLoading()
         })
         break
 
@@ -112,8 +129,8 @@ export default class OmnitonePlayer {
           this.contentBuffer = Omnitone.mergeBufferListByChannel(
             this.audioContext,
             results[0])
-          this.durationInSeconds = this.contentBuffer.length /
-            this.contentBuffer.sampleRate
+        }).then(() => {
+          this.finalizeLoading()
         })
         break
     }
@@ -183,16 +200,5 @@ export default class OmnitonePlayer {
     rotationMatrix3[8] = forward[2]
 
     this.ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
-  }
-
-  updateElapsedTimeInMilliSeconds = () => {
-    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
-    this.elapsedTimeInMilliSeconds = Date.now() -
-      this.playbackStartedAtTimeInMilliseconds + this.offset
-  }
-
-  clearCurrentBufferSource = () => {
-    this.currentBufferSource.stop()
-    this.currentBufferSource.disconnect()
   }
 }
