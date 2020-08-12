@@ -38,10 +38,42 @@ export default class OmnitonePlayer {
     return a
   }
 
-  updateElapsedTimeInMilliSeconds = () => {
-    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
-    this.elapsedTimeInMilliSeconds = Date.now() -
-      this.playbackStartedAtTimeInMilliseconds + this.offset
+  // ---------------- Helpers ----------------
+
+  rotateSoundfield (azimuth, elevation) {
+    const rotationMatrix3 = new Float32Array(9)
+
+    const theta = azimuth / 180 * Math.PI
+    const phi = elevation / 180 * Math.PI
+
+    const forward = [
+      Math.sin(theta) * Math.cos(phi),
+      Math.sin(phi),
+      Math.cos(theta) * Math.cos(phi),
+    ]
+    const upInitial = [0, 1, 0]
+    const right = OmnitonePlayer.normalize(
+      OmnitonePlayer.crossProduct(forward, upInitial))
+    const up = OmnitonePlayer.normalize(
+      OmnitonePlayer.crossProduct(right, forward))
+
+    rotationMatrix3[0] = right[0]
+    rotationMatrix3[1] = right[1]
+    rotationMatrix3[2] = right[2]
+    rotationMatrix3[3] = up[0]
+    rotationMatrix3[4] = up[1]
+    rotationMatrix3[5] = up[2]
+    rotationMatrix3[6] = forward[0]
+    rotationMatrix3[7] = forward[1]
+    rotationMatrix3[8] = forward[2]
+
+    this.ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
+  }
+
+  finalizeLoading = () => {
+    this.rotateSoundfield(0, 0)
+    this.durationInSeconds = this.contentBuffer.length /
+      this.contentBuffer.sampleRate
   }
 
   clearCurrentBufferSource = () => {
@@ -49,11 +81,13 @@ export default class OmnitonePlayer {
     this.currentBufferSource.disconnect()
   }
 
-  finalizeLoading = () => {
-    this.durationInSeconds = this.contentBuffer.length /
-      this.contentBuffer.sampleRate
-    this.rotateSoundfield(0, 0)
+  updateElapsedTimeInMilliSeconds = () => {
+    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
+    this.elapsedTimeInMilliSeconds = Date.now() -
+      this.playbackStartedAtTimeInMilliseconds + this.offset
   }
+
+  // ---------------- Main functions ----------------
 
   initialize = () => {
     this.audioContext = new AudioContext()
@@ -63,7 +97,7 @@ export default class OmnitonePlayer {
         { channelMap: this.channelMap })
     } else if (this.order > 1) {
       this.ambisonicsRenderer = Omnitone.createHOARenderer(this.audioContext,
-        { ambisonicOrder: this.order })
+        { channelMap: this.channelMap, ambisonicOrder: this.order })
     }
     this.ambisonicsRenderer.initialize()
     this.inputGain.connect(this.ambisonicsRenderer.input)
@@ -170,35 +204,5 @@ export default class OmnitonePlayer {
 
   resume = () => {
     this.play((this.elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds)
-  }
-
-  rotateSoundfield (azimuth, elevation) {
-    const rotationMatrix3 = new Float32Array(9)
-
-    const theta = azimuth / 180 * Math.PI
-    const phi = elevation / 180 * Math.PI
-
-    const forward = [
-      Math.sin(theta) * Math.cos(phi),
-      Math.sin(phi),
-      Math.cos(theta) * Math.cos(phi),
-    ]
-    const upInitial = [0, 1, 0]
-    const right = OmnitonePlayer.normalize(
-      OmnitonePlayer.crossProduct(forward, upInitial))
-    const up = OmnitonePlayer.normalize(
-      OmnitonePlayer.crossProduct(right, forward))
-
-    rotationMatrix3[0] = right[0]
-    rotationMatrix3[1] = right[1]
-    rotationMatrix3[2] = right[2]
-    rotationMatrix3[3] = up[0]
-    rotationMatrix3[4] = up[1]
-    rotationMatrix3[5] = up[2]
-    rotationMatrix3[6] = forward[0]
-    rotationMatrix3[7] = forward[1]
-    rotationMatrix3[8] = forward[2]
-
-    this.ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
   }
 }

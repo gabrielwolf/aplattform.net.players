@@ -1,10 +1,12 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-const foa = new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2])
-const soa = new OmnitonePlayer('sounds/soa.flac', 2)
+const foa = new OmnitonePlayer('sounds/foa.wav', 1, [0, 3, 1, 2])
+const soa = new OmnitonePlayer('sounds/soa.flac', 2,
+  [0, 3, 1, 2, 6, 7, 5, 8, 4])
 const toa = new OmnitonePlayer('sounds/toa.flac', 3)
 
-// FOA
+// ---------------- FOA ----------------
+
 document.getElementById('foa-init').
   addEventListener('click', foa.initialize)
 document.getElementById('foa-load').
@@ -19,11 +21,9 @@ document.getElementById('foa-resume').
   addEventListener('click', foa.resume)
 document.getElementById('foa-update').
   addEventListener('click', function () {
-    document.getElementById(
-      'foa-progress').max = foa.durationInSeconds
+    document.getElementById('foa-progress').max = foa.durationInSeconds
     setInterval(() => {
-      document.getElementById(
-        'foa-progress').value = foa.elapsedTimeInSeconds
+      document.getElementById('foa-progress').value = foa.elapsedTimeInSeconds
     }, 1)
   })
 document.getElementById('foa-gain').
@@ -53,13 +53,14 @@ document.getElementById('foa-elevation').
     foa.rotateSoundfield(azimuth, elevation)
   })
 
-// SOA
+// ---------------- SOA ----------------
+
 document.getElementById('soa-init').
   addEventListener('click', soa.initialize)
 document.getElementById('soa-load').
   addEventListener('click', soa.load)
 document.getElementById('soa-play').
-  addEventListener('click', function () {
+  addEventListener('click', () => {
     soa.play(document.getElementById('soa-position').value)
   })
 document.getElementById('soa-stop').
@@ -67,9 +68,8 @@ document.getElementById('soa-stop').
 document.getElementById('soa-resume').
   addEventListener('click', soa.resume)
 document.getElementById('soa-update').
-  addEventListener('click', function () {
-    document.getElementById(
-      'soa-progress').max = soa.durationInSeconds
+  addEventListener('click', () => {
+    document.getElementById('soa-progress').max = soa.durationInSeconds
     setInterval(() => {
       document.getElementById(
         'soa-progress').value = soa.elapsedTimeInSeconds
@@ -102,13 +102,14 @@ document.getElementById('soa-elevation').
     soa.rotateSoundfield(azimuth, elevation)
   })
 
-// TOA
+// ---------------- TOA ----------------
+
 document.getElementById('toa-init').
   addEventListener('click', toa.initialize)
 document.getElementById('toa-load').
   addEventListener('click', toa.load)
 document.getElementById('toa-play').
-  addEventListener('click', function () {
+  addEventListener('click', () => {
     toa.play(document.getElementById('toa-position').value)
   })
 document.getElementById('toa-stop').
@@ -117,8 +118,7 @@ document.getElementById('toa-resume').
   addEventListener('click', toa.resume)
 document.getElementById('toa-update').
   addEventListener('click', function () {
-    document.getElementById(
-      'toa-progress').max = toa.durationInSeconds
+    document.getElementById('toa-progress').max = toa.durationInSeconds
     setInterval(() => {
       document.getElementById(
         'toa-progress').value = toa.elapsedTimeInSeconds
