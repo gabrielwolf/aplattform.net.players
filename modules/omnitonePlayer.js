@@ -18,7 +18,7 @@ export default class OmnitonePlayer {
   set gain (gain) {
     this.inputGain.gain.exponentialRampToValueAtTime(
       Math.pow(10, parseFloat(gain) / 20),
-      this.audioContext.currentTime + 0.5,
+      this.audioContext.currentTime + 0.2,
     )
   }
 
