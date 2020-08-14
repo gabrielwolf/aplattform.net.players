@@ -30,6 +30,34 @@ export default class OmnitonePlayer {
     ]
   }
 
+  static getListOfFileNames (src, order) {
+    let listOfFileNames = []
+    let postfix
+
+    switch (order) {
+      case 1:
+        postfix = ['']
+        break
+
+      case 2:
+        postfix = ['_ch0-7', '_ch8']
+        break
+
+      case 3:
+        postfix = ['_ch0-7', '_ch8-15']
+        break
+    }
+
+    for (let i = 0; i < postfix.length; ++i) {
+      listOfFileNames.push(
+        src.substring(0, src.length - src.split('.').pop().length - 1)
+        + postfix[i]
+        + '.' + src.split('.').pop(),
+      )
+    }
+    return listOfFileNames
+  }
+
   static normalize (a) {
     const n = Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2])
     a[0] /= n
@@ -105,68 +133,30 @@ export default class OmnitonePlayer {
   }
 
   load = () => {
-    this.listOfFileNames = []
-    let file1, file2
-
-    switch (this.order) {
-      case 1:
-        Promise.all([
-          Omnitone.createBufferList(this.audioContext,
-            [this.src]),
-        ]).then((results) => {
-          this.contentBuffer = Omnitone.mergeBufferListByChannel(
-            this.audioContext,
-            results[0])
-        }).then(() => {
-          this.finalizeLoading()
-        })
-        break
-
-      case 2:
-        file1 = this.src.substring(0,
-          this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch0-7' + '.' + this.src.split('.').pop()
-        file2 = this.src.substring(0,
-          this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch8' + '.' + this.src.split('.').pop()
-
-        this.listOfFileNames.push(file1)
-        this.listOfFileNames.push(file2)
-
-        Promise.all([
-          Omnitone.createBufferList(this.audioContext,
-            [this.listOfFileNames[0], this.listOfFileNames[1]]),
-        ]).then((results) => {
-          this.contentBuffer = Omnitone.mergeBufferListByChannel(
-            this.audioContext,
-            results[0])
-        }).then(() => {
-          this.finalizeLoading()
-        })
-        break
-
-      case 3:
-        file1 = this.src.substring(0,
-          this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch0-7' + '.' + this.src.split('.').pop()
-        file2 = this.src.substring(0,
-          this.src.length - this.src.split('.').pop().length - 1)
-          + '_ch8-15' + '.' + this.src.split('.').pop()
-
-        this.listOfFileNames.push(file1)
-        this.listOfFileNames.push(file2)
-
-        Promise.all([
-          Omnitone.createBufferList(this.audioContext,
-            [this.listOfFileNames[0], this.listOfFileNames[1]]),
-        ]).then((results) => {
-          this.contentBuffer = Omnitone.mergeBufferListByChannel(
-            this.audioContext,
-            results[0])
-        }).then(() => {
-          this.finalizeLoading()
-        })
-        break
+    if (this.order === 1) {
+      Promise.all([
+        Omnitone.createBufferList(this.audioContext, [this.src]),
+      ]).then((results) => {
+        this.contentBuffer = Omnitone.mergeBufferListByChannel(
+          this.audioContext,
+          results[0])
+      }).then(() => {
+        this.finalizeLoading()
+      })
+    } else if (this.order === 2 || this.order === 3) {
+      Promise.all([
+        Omnitone.createBufferList(this.audioContext,
+          [
+            OmnitonePlayer.getListOfFileNames(this.src, this.order)[0],
+            OmnitonePlayer.getListOfFileNames(this.src, this.order)[1],
+          ]),
+      ]).then((results) => {
+        this.contentBuffer = Omnitone.mergeBufferListByChannel(
+          this.audioContext,
+          results[0])
+      }).then(() => {
+        this.finalizeLoading()
+      })
     }
   }
 
