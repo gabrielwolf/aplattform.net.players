@@ -181,7 +181,13 @@ export default class OmnitonePlayer {
     else if (this.order === 2 || this.order === 3)
       console.log('HOAPlayer playing...')
     this.currentBufferSource.onended = () => {
-      // TODO clear elapsed time and clear setInterval
+      let lastChanceToStopBeforeEndOfSongInSeconds = 1
+      if (Math.abs(this.durationInSeconds - this.elapsedTimeInSeconds) <
+        lastChanceToStopBeforeEndOfSongInSeconds) {
+        clearInterval(this.calcElapsedHandler)
+        this.playedFromPosition = .0
+        this.elapsedTimeInMilliSeconds = 0
+      }
     }
   }
 
