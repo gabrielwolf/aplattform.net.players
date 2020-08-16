@@ -28,13 +28,13 @@ document.getElementById('foa-update').
     }, 1)
   })
 document.getElementById('foa-gain').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const gain = document.getElementById('foa-gain').value
     document.getElementById('foa-gain-label').textContent = gain
     foa.gain = gain
   })
 document.getElementById('foa-azimuth').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('foa-azimuth').value)
     const elevation = parseFloat(document.getElementById('foa-elevation').value)
     document.getElementById('foa-azimuth-label').
@@ -44,7 +44,7 @@ document.getElementById('foa-azimuth').
     foa.rotateSoundfield(azimuth, elevation)
   })
 document.getElementById('foa-elevation').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('foa-azimuth').value)
     const elevation = parseFloat(document.getElementById('foa-elevation').value)
     document.getElementById('foa-azimuth-label').
@@ -77,13 +77,13 @@ document.getElementById('soa-update').
     }, 100)
   })
 document.getElementById('soa-gain').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const gain = document.getElementById('soa-gain').value
     document.getElementById('soa-gain-label').textContent = gain
     soa.gain = gain
   })
 document.getElementById('soa-azimuth').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('soa-azimuth').value)
     const elevation = parseFloat(document.getElementById('soa-elevation').value)
     document.getElementById('soa-azimuth-label').
@@ -93,7 +93,7 @@ document.getElementById('soa-azimuth').
     soa.rotateSoundfield(azimuth, elevation)
   })
 document.getElementById('soa-elevation').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('soa-azimuth').value)
     const elevation = parseFloat(document.getElementById('soa-elevation').value)
     document.getElementById('soa-azimuth-label').
@@ -126,13 +126,13 @@ document.getElementById('toa-update').
     }, 100)
   })
 document.getElementById('toa-gain').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const gain = document.getElementById('toa-gain').value
     document.getElementById('toa-gain-label').textContent = gain
     toa.gain = gain
   })
 document.getElementById('toa-azimuth').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('toa-azimuth').value)
     const elevation = parseFloat(document.getElementById('toa-elevation').value)
     document.getElementById('toa-azimuth-label').
@@ -142,7 +142,7 @@ document.getElementById('toa-azimuth').
     toa.rotateSoundfield(azimuth, elevation)
   })
 document.getElementById('toa-elevation').
-  addEventListener('input', (event) => {
+  addEventListener('input', () => {
     const azimuth = parseFloat(document.getElementById('toa-azimuth').value)
     const elevation = parseFloat(document.getElementById('toa-elevation').value)
     document.getElementById('toa-azimuth-label').
