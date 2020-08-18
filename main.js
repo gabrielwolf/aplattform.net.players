@@ -1,11 +1,16 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
-// ---------------- FOA ----------------
-
 const e = {
-  foa: new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2]),
-  soa: new OmnitonePlayer('sounds/soa.flac', 2, [0, 3, 1, 2, 6, 7, 5, 8, 4]),
-  toa: new OmnitonePlayer('sounds/toa.flac', 3),
+  // First order FuMa example
+  foa: window.foa = new OmnitonePlayer('sounds/foa.flac', 1,
+    [0, 3, 1, 2]),
+  // Second order FuMa example
+  soa: window.soa = new OmnitonePlayer('sounds/soa.flac', 2,
+    [0, 3, 1, 2, 6, 7, 5, 8, 4]),
+  // Third order AmbiX example
+  toa: window.toa = new OmnitonePlayer('sounds/toa.flac', 3),
+
+  // window. is for debugging
 }
 
 for (const eKey in e) {
@@ -27,7 +32,8 @@ for (const eKey in e) {
         eKey + '-progress').max = e[eKey].durationInSeconds
       setInterval(() => {
         document.getElementById(
-          eKey + '-progress').value = e[eKey].elapsedTimeInSeconds
+          eKey + '-progress',
+        ).value = e[eKey].elapsedTimeInSeconds
       }, 1)
     })
   document.getElementById(eKey + '-gain').
