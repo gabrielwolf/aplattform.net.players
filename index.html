@@ -25,20 +25,30 @@
         <h3>First Order Ambisonics</h3>
         <button id="foa-init">Init</button>
         <button disabled id="foa-load">Load</button>
-        <span id="foa-current-time"></span>
-        <span id="foa-duration"></span>
-        <button disabled id="foa-play">Play from %</button>
-        <input disabled id="foa-position" size="4" type="text" value="0">
+        <button disabled id="foa-play">Play from</button>
+
+        <label for="foa-position">Position [0,1]</label>
+        <input disabled id="foa-position" size="3" type="text" value="0">
+
         <button disabled id="foa-stop">Stop</button>
         <button disabled id="foa-resume">Resume</button>
+
         <button disabled id="foa-update-progress">Progress</button>
-        <progress disabled id="foa-progress" value="0"></progress>
+        <span id="foa-current-time">0:00</span> /
+        <span id="foa-duration">0:00</span>
+        <progress id="foa-progress" value="0"></progress>
+
+        <label for="foa-gain">Gain</label>
         <input disabled id="foa-gain" max="0" min="-60" step="1" type="range" value="0">
-        <span disabled id="foa-gain-label">0</span> dB
+        <span id="foa-gain-label">0</span> dB
+
+        <label for="foa-azimuth">Azimuth</label>
         <input disabled id="foa-azimuth" max="180" min="-180" step="0.01" type="range" value="0">
-        <span id="foa-azimuth-label">0</span>° Azimuth
+        <span id="foa-azimuth-label">0</span>°
+
+        <label for="foa-elevation">Elevation</label>
         <input disabled id="foa-elevation" max="90" min="-90" step="0.01" type="range" value="0">
-        <span id="foa-elevation-label">0</span>° Elevation
+        <span id="foa-elevation-label">0</span>°
       </dt>
       <dd>
         <p>"César Franck" · Organ played by Daniela Niedhammer<br>
@@ -54,20 +64,30 @@
         <h3>Second Order Ambisonics</h3>
         <button id="soa-init">Init</button>
         <button disabled id="soa-load">Load</button>
-        <span id="soa-current-time"></span>
-        <span id="soa-duration"></span>
-        <button disabled id="soa-play">Play from %</button>
-        <input disabled id="soa-position" size="4" type="text" value="0">
+        <button disabled id="soa-play">Play from</button>
+
+        <label for="soa-position">Position [0,1]</label>
+        <input disabled id="soa-position" size="3" type="text" value="0">
+
         <button disabled id="soa-stop">Stop</button>
         <button disabled id="soa-resume">Resume</button>
+
         <button disabled id="soa-update-progress">Progress</button>
-        <progress disabled id="soa-progress" value="0"></progress>
+        <span id="soa-current-time">0:00</span> /
+        <span id="soa-duration">0:00</span>
+        <progress id="soa-progress" value="0"></progress>
+
+        <label for="soa-gain">Gain</label>
         <input disabled id="soa-gain" max="0" min="-60" step="1" type="range" value="0">
-        <span disabled id="soa-gain-label">0</span> dB
+        <span id="soa-gain-label">0</span> dB
+
+        <label for="soa-azimuth">Azimuth</label>
         <input disabled id="soa-azimuth" max="180" min="-180" step="0.01" type="range" value="0">
-        <span id="soa-azimuth-label">0</span>° Azimuth
+        <span id="soa-azimuth-label">0</span>°
+
+        <label for="soa-elevation">Elevation</label>
         <input disabled id="soa-elevation" max="90" min="-90" step="0.01" type="range" value="0">
-        <span id="soa-elevation-label">0</span>° Elevation
+        <span id="soa-elevation-label">0</span>°
       </dt>
       <dd>
         <p>"Electro" · Synthetically generated Ambisonics<br>
@@ -83,20 +103,30 @@
         <h3>Third Order Ambisonics</h3>
         <button id="toa-init">Init</button>
         <button disabled id="toa-load">Load</button>
-        <span id="toa-current-time"></span>
-        <span id="toa-duration"></span>
-        <button disabled id="toa-play">Play from %</button>
-        <input disabled id="toa-position" size="4" type="text" value="0">
+        <button disabled id="toa-play">Play from</button>
+
+        <label for="toa-position">Position [0,1]</label>
+        <input disabled id="toa-position" size="3" type="text" value="0">
+
         <button disabled id="toa-stop">Stop</button>
         <button disabled id="toa-resume">Resume</button>
+
         <button disabled id="toa-update-progress">Progress</button>
-        <progress disabled id="toa-progress" value="0"></progress>
+        <span id="toa-current-time">0:00</span> /
+        <span id="toa-duration">0:00</span>
+        <progress id="toa-progress" value="0"></progress>
+
+        <label for="toa-gain">Gain</label>
         <input disabled id="toa-gain" max="0" min="-60" step="1" type="range" value="0">
-        <span disabled id="toa-gain-label">0</span> dB
+        <span id="toa-gain-label">0</span> dB
+
+        <label for="toa-azimuth">Azimuth</label>
         <input disabled id="toa-azimuth" max="180" min="-180" step="0.01" type="range" value="0">
-        <span id="toa-azimuth-label">0</span>° Azimuth
+        <span id="toa-azimuth-label">0</span>°
+
+        <label for="toa-elevation">Elevation</label>
         <input disabled id="toa-elevation" max="90" min="-90" step="0.01" type="range" value="0">
-        <span id="toa-elevation-label">0</span>° Elevation
+        <span id="toa-elevation-label">0</span>°
       </dt>
       <dd>
         <p>"Dylanesque" · Acoustic guitar in a large open living room<br>

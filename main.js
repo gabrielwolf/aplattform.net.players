@@ -66,7 +66,7 @@ for (const eKey in e) {
         document.getElementById(
           eKey + '-current-time').innerText = secondsToReadableTime(
           e[eKey].elapsedTimeInSeconds,
-        ) + ' / '
+        )
       }, 50)
       document.getElementById(eKey + '-update-progress').disabled = true
     })
