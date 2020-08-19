@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <title>Ambisonics Player</title>
-  <link href="maisn.css" rel="stylesheet" type="text/css">
+  <link href="main.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
@@ -25,7 +25,8 @@
         <h3>First Order Ambisonics</h3>
         <button id="foa-init">Init</button>
         <button disabled id="foa-load">Load</button>
-        <button disabled id="foa-play">Play from</button>
+        <span id="foa-time"></span>
+        <button disabled id="foa-play">Play from %</button>
         <input disabled id="foa-position" size="4" type="text" value="0">
         <button disabled id="foa-stop">Stop</button>
         <button disabled id="foa-resume">Resume</button>
@@ -52,7 +53,8 @@
         <h3>Second Order Ambisonics</h3>
         <button id="soa-init">Init</button>
         <button disabled id="soa-load">Load</button>
-        <button disabled id="soa-play">Play from</button>
+        <span id="soa-time"></span>
+        <button disabled id="soa-play">Play from %</button>
         <input disabled id="soa-position" size="4" type="text" value="0">
         <button disabled id="soa-stop">Stop</button>
         <button disabled id="soa-resume">Resume</button>
@@ -79,7 +81,8 @@
         <h3>Third Order Ambisonics</h3>
         <button id="toa-init">Init</button>
         <button disabled id="toa-load">Load</button>
-        <button disabled id="toa-play">Play from</button>
+        <span id="toa-time"></span>
+        <button disabled id="toa-play">Play from %</button>
         <input disabled id="toa-position" size="4" type="text" value="0">
         <button disabled id="toa-stop">Stop</button>
         <button disabled id="toa-resume">Resume</button>
