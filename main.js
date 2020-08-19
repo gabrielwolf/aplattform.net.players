@@ -28,7 +28,7 @@ for (const eKey in e) {
       e[eKey].load().then(() => {
         document.getElementById(eKey + '-play').disabled = false
         document.getElementById(eKey + '-position').disabled = false
-        document.getElementById(eKey + '-update').disabled = false
+        document.getElementById(eKey + '-update-progress').disabled = false
         document.getElementById(eKey + '-gain').disabled = false
         document.getElementById(eKey + '-progress').disabled = false
         document.getElementById(eKey + '-azimuth').disabled = false
@@ -51,7 +51,7 @@ for (const eKey in e) {
       e[eKey].resume()
       document.getElementById(eKey + '-resume').disabled = true
     })
-  document.getElementById(eKey + '-update').
+  document.getElementById(eKey + '-update-progress').
     addEventListener('click', () => {
       document.getElementById(
         eKey + '-progress').max = e[eKey].durationInSeconds
@@ -60,7 +60,7 @@ for (const eKey in e) {
           eKey + '-progress',
         ).value = e[eKey].elapsedTimeInSeconds
       }, 1)
-      document.getElementById(eKey + '-update').disabled = true
+      document.getElementById(eKey + '-update-progress').disabled = true
     })
   document.getElementById(eKey + '-gain').
     addEventListener('input', () => {
