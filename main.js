@@ -23,8 +23,9 @@ for (const eKey in e) {
     })
   document.getElementById(eKey + '-load').
     addEventListener('click', () => {
+      document.getElementById(eKey + '-load').disabled = true
+      document.getElementById(eKey + '-load').innerText = 'Loading...'
       e[eKey].load().then(() => {
-        document.getElementById(eKey + '-load').disabled = true
         document.getElementById(eKey + '-play').disabled = false
         document.getElementById(eKey + '-position').disabled = false
         document.getElementById(eKey + '-update').disabled = false
@@ -32,6 +33,7 @@ for (const eKey in e) {
         document.getElementById(eKey + '-progress').disabled = false
         document.getElementById(eKey + '-azimuth').disabled = false
         document.getElementById(eKey + '-elevation').disabled = false
+        document.getElementById(eKey + '-load').innerText = 'Loaded'
       })
     })
   document.getElementById(eKey + '-play').
