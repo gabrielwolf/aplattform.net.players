@@ -14,6 +14,7 @@ const e = {
 }
 
 for (const eKey in e) {
+
   document.getElementById(eKey + '-init').
     addEventListener('click', () => {
       e[eKey].initialize().then(() => {
@@ -21,6 +22,7 @@ for (const eKey in e) {
         document.getElementById(eKey + '-load').disabled = false
       })
     })
+
   document.getElementById(eKey + '-load').
     addEventListener('click', () => {
       document.getElementById(eKey + '-load').disabled = true
@@ -28,7 +30,6 @@ for (const eKey in e) {
       e[eKey].load().then(() => {
         document.getElementById(eKey + '-play').disabled = false
         document.getElementById(eKey + '-position').disabled = false
-        document.getElementById(eKey + '-update-progress').disabled = false
         document.getElementById(eKey + '-gain').disabled = false
         document.getElementById(eKey + '-progress').disabled = false
         document.getElementById(eKey + '-azimuth').disabled = false
@@ -38,44 +39,54 @@ for (const eKey in e) {
           eKey + '-duration').innerText = secondsToReadableTime(
           e[eKey].durationInSeconds,
         )
+        document.getElementById(
+          eKey + '-progress').max = e[eKey].durationInSeconds
+        setInterval(() => {
+          document.getElementById(
+            eKey + '-progress',
+          ).value = e[eKey].elapsedTimeInSeconds
+          document.getElementById(
+            eKey + '-current-time').innerText = secondsToReadableTime(
+            e[eKey].elapsedTimeInSeconds,
+          )
+        }, 50)
       })
     })
+
   document.getElementById(eKey + '-play').
     addEventListener('click', () => {
       e[eKey].play(document.getElementById(eKey + '-position').value)
       document.getElementById(eKey + '-stop').disabled = false
     })
+
   document.getElementById(eKey + '-stop').
     addEventListener('click', () => {
       e[eKey].stop()
       document.getElementById(eKey + '-resume').disabled = false
     })
+
   document.getElementById(eKey + '-resume').
     addEventListener('click', () => {
       e[eKey].resume()
       document.getElementById(eKey + '-resume').disabled = true
     })
-  document.getElementById(eKey + '-update-progress').
-    addEventListener('click', () => {
-      document.getElementById(
-        eKey + '-progress').max = e[eKey].durationInSeconds
-      setInterval(() => {
-        document.getElementById(
-          eKey + '-progress',
-        ).value = e[eKey].elapsedTimeInSeconds
-        document.getElementById(
-          eKey + '-current-time').innerText = secondsToReadableTime(
-          e[eKey].elapsedTimeInSeconds,
-        )
-      }, 50)
-      document.getElementById(eKey + '-update-progress').disabled = true
+
+  document.getElementById(eKey + '-progress').
+    addEventListener('click', function (e) {
+      let x = e.pageX - this.offsetLeft,
+        percentage = x / this.offsetWidth
+      console.log(percentage)
+      document.getElementById(eKey + '-position').value = percentage
+      document.getElementById(eKey + '-play').click()
     })
+
   document.getElementById(eKey + '-gain').
     addEventListener('input', () => {
       const gain = document.getElementById(eKey + '-gain').value
       document.getElementById(eKey + '-gain-label').textContent = gain
       e[eKey].gain = gain
     })
+
   document.getElementById(eKey + '-azimuth').
     addEventListener('input', () => {
       const azimuth = parseFloat(
@@ -88,6 +99,7 @@ for (const eKey in e) {
         textContent = String(elevation)
       e[eKey].rotateSoundfield(azimuth, elevation)
     })
+
   document.getElementById(eKey + '-elevation').
     addEventListener('input', () => {
       const azimuth = parseFloat(
@@ -109,6 +121,6 @@ function secondsToReadableTime (seconds) {
   time = (seconds > 3600)
     ? time.substr(11, 8)
     : time.substr(14, 5)
-  time = (time.substr(0, 1) == 0) ? time.substring(1) : time
+  time = (time.substr(0, 1) === 0) ? time.substring(1) : time
   return time
 }
