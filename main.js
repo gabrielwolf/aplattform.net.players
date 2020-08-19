@@ -29,6 +29,7 @@ for (const eKey in e) {
       document.getElementById(eKey + '-load').innerText = 'Loading...'
       e[eKey].load().then(() => {
         document.getElementById(eKey + '-play').disabled = false
+        document.getElementById(eKey + '-loop').disabled = false
         document.getElementById(eKey + '-position').disabled = false
         document.getElementById(eKey + '-gain').disabled = false
         document.getElementById(eKey + '-progress').disabled = false
@@ -69,6 +70,11 @@ for (const eKey in e) {
     addEventListener('click', () => {
       e[eKey].resume()
       document.getElementById(eKey + '-resume').disabled = true
+    })
+
+  document.getElementById(eKey + '-loop').
+    addEventListener('click', () => {
+      e[eKey].loop = document.getElementById(eKey + '-loop').checked
     })
 
   document.getElementById(eKey + '-progress').

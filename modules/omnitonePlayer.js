@@ -9,10 +9,19 @@ export default class OmnitonePlayer {
     this.playedFromPosition = .0
     this.elapsedTimeInMilliSeconds = 0
     this.durationInSeconds = 0
+    this._loop = false
   }
 
   get elapsedTimeInSeconds () {
     return this.elapsedTimeInMilliSeconds / 1000
+  }
+
+  get loop () {
+    return this._loop
+  }
+
+  set loop (value) {
+    this._loop = value
   }
 
   set gain (gain) {
@@ -183,6 +192,10 @@ export default class OmnitonePlayer {
         clearInterval(this.calcElapsedHandler)
         this.playedFromPosition = .0
         this.elapsedTimeInMilliSeconds = 0
+
+        if (this._loop) {
+          this.play(0)
+        }
       }
     }
   }
