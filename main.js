@@ -15,17 +15,40 @@ const e = {
 
 for (const eKey in e) {
   document.getElementById(eKey + '-init').
-    addEventListener('click', e[eKey].initialize)
+    addEventListener('click', () => {
+      e[eKey].initialize().then(() => {
+        document.getElementById(eKey + '-init').disabled = true
+        document.getElementById(eKey + '-load').disabled = false
+      })
+    })
   document.getElementById(eKey + '-load').
-    addEventListener('click', e[eKey].load)
+    addEventListener('click', () => {
+      e[eKey].load().then(() => {
+        document.getElementById(eKey + '-load').disabled = true
+        document.getElementById(eKey + '-play').disabled = false
+        document.getElementById(eKey + '-position').disabled = false
+        document.getElementById(eKey + '-update').disabled = false
+        document.getElementById(eKey + '-gain').disabled = false
+        document.getElementById(eKey + '-progress').disabled = false
+        document.getElementById(eKey + '-azimuth').disabled = false
+        document.getElementById(eKey + '-elevation').disabled = false
+      })
+    })
   document.getElementById(eKey + '-play').
     addEventListener('click', () => {
       e[eKey].play(document.getElementById(eKey + '-position').value)
+      document.getElementById(eKey + '-stop').disabled = false
     })
   document.getElementById(eKey + '-stop').
-    addEventListener('click', e[eKey].stop)
+    addEventListener('click', () => {
+      e[eKey].stop()
+      document.getElementById(eKey + '-resume').disabled = false
+    })
   document.getElementById(eKey + '-resume').
-    addEventListener('click', e[eKey].resume)
+    addEventListener('click', () => {
+      e[eKey].resume()
+      document.getElementById(eKey + '-resume').disabled = true
+    })
   document.getElementById(eKey + '-update').
     addEventListener('click', () => {
       document.getElementById(
@@ -35,6 +58,7 @@ for (const eKey in e) {
           eKey + '-progress',
         ).value = e[eKey].elapsedTimeInSeconds
       }, 1)
+      document.getElementById(eKey + '-update').disabled = true
     })
   document.getElementById(eKey + '-gain').
     addEventListener('input', () => {

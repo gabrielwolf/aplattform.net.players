@@ -117,14 +117,16 @@ export default class OmnitonePlayer {
 
   // ---------------- Main functions ----------------
 
-  initialize = () => {
+  async initialize () {
     this.audioContext = new AudioContext()
     this.inputGain = this.audioContext.createGain()
     if (this.order === 1) {
-      this.ambisonicsRenderer = Omnitone.createFOARenderer(this.audioContext,
+      this.ambisonicsRenderer = await Omnitone.createFOARenderer(
+        this.audioContext,
         { channelMap: this.channelMap })
     } else if (this.order > 1) {
-      this.ambisonicsRenderer = Omnitone.createHOARenderer(this.audioContext,
+      this.ambisonicsRenderer = await Omnitone.createHOARenderer(
+        this.audioContext,
         { channelMap: this.channelMap, ambisonicOrder: this.order })
     }
     this.ambisonicsRenderer.initialize()
@@ -132,32 +134,26 @@ export default class OmnitonePlayer {
     this.ambisonicsRenderer.output.connect(this.audioContext.destination)
   }
 
-  load = () => {
+  async load () {
     if (this.order === 1) {
-      Promise.all([
-        Omnitone.createBufferList(this.audioContext, [this.src]),
-      ]).then((results) => {
-        this.contentBuffer = Omnitone.mergeBufferListByChannel(
-          this.audioContext,
-          results[0])
-      }).then(() => {
-        this.finalizeLoading()
-      })
+      const results = await Omnitone.createBufferList(this.audioContext,
+        [this.src])
+      this.contentBuffer = await Omnitone.mergeBufferListByChannel(
+        this.audioContext,
+        results,
+      )
     } else if (this.order === 2 || this.order === 3) {
-      Promise.all([
-        Omnitone.createBufferList(this.audioContext,
-          [
-            OmnitonePlayer.getListOfFileNames(this.src, this.order)[0],
-            OmnitonePlayer.getListOfFileNames(this.src, this.order)[1],
-          ]),
-      ]).then((results) => {
-        this.contentBuffer = Omnitone.mergeBufferListByChannel(
-          this.audioContext,
-          results[0])
-      }).then(() => {
-        this.finalizeLoading()
-      })
+      const results = await Omnitone.createBufferList(this.audioContext,
+        [
+          OmnitonePlayer.getListOfFileNames(this.src, this.order)[0],
+          OmnitonePlayer.getListOfFileNames(this.src, this.order)[1],
+        ])
+      this.contentBuffer = await Omnitone.mergeBufferListByChannel(
+        this.audioContext,
+        results,
+      )
     }
+    this.finalizeLoading()
   }
 
   play = (from) => {
