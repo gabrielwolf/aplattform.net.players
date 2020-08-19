@@ -1,12 +1,30 @@
+//  Generic Ambisonics Player Classes
+//    Copyright (C) 2020 Gabriel Wolf <gabriel.wolf@posteo.de>
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU Affero General Public License as published
+//    by the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU Affero General Public License for more details.
+//
+//    You should have received a copy of the GNU Affero General Public License
+//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
 const e = {
   // First order FuMa example
   foa: window.foa = new OmnitonePlayer('sounds/foa.flac', 1,
     [0, 3, 1, 2]),
+
   // Second order FuMa example
   soa: window.soa = new OmnitonePlayer('sounds/soa.flac', 2,
     [0, 3, 1, 2, 6, 7, 5, 8, 4]),
+
   // Third order AmbiX example
   toa: window.toa = new OmnitonePlayer('sounds/toa.flac', 3),
 
