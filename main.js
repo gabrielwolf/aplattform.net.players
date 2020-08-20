@@ -82,6 +82,9 @@ for (const eKey in e) {
     addEventListener('click', () => {
       e[eKey].stop()
       document.getElementById(eKey + '-resume').disabled = false
+      document.getElementById(
+        eKey + '-position').value = e[eKey].elapsedTimeInSeconds /
+        e[eKey].durationInSeconds
     })
 
   document.getElementById(eKey + '-resume').
