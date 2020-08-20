@@ -25,10 +25,10 @@ const e = {
   soa: window.soa = new OmnitonePlayer('sounds/soa.flac', 2,
     [0, 3, 1, 2, 6, 7, 5, 8, 4]),
 
-  // Third order AmbiX example
+  // Third order ambiX example
   toa: window.toa = new OmnitonePlayer('sounds/toa.flac', 3),
 
-  // window. is for debugging
+  // window. is just for debugging purposes, can be removed in production
 }
 
 for (const eKey in e) {
