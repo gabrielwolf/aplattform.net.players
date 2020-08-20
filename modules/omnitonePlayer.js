@@ -18,18 +18,22 @@ import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
 
 export default class OmnitonePlayer {
   constructor (src, order, channelMap) {
-    this.src = src
-    this.order = order
-    this.channelMap = channelMap
-    this.playbackStartedAtTimeInMilliseconds = 0
-    this.playedFromPosition = .0
-    this.elapsedTimeInMilliSeconds = 0
-    this.durationInSeconds = 0
+    this._src = src
+    this._order = order
+    this._channelMap = channelMap
+    this._playbackStartedAtTimeInMilliseconds = 0
+    this._playedFromPosition = .0
+    this._elapsedTimeInMilliSeconds = 0
+    this._durationInSeconds = 0
     this._loop = false
   }
 
   get elapsedTimeInSeconds () {
-    return this.elapsedTimeInMilliSeconds / 1000
+    return this._elapsedTimeInMilliSeconds / 1000
+  }
+
+  get durationInSeconds () {
+    return this._durationInSeconds
   }
 
   get loop () {
@@ -125,7 +129,7 @@ export default class OmnitonePlayer {
 
   finalizeLoading = () => {
     this.rotateSoundfield(0, 0)
-    this.durationInSeconds = this.contentBuffer.length /
+    this._durationInSeconds = this.contentBuffer.length /
       this.contentBuffer.sampleRate
   }
 
@@ -135,9 +139,9 @@ export default class OmnitonePlayer {
   }
 
   updateElapsedTimeInMilliSeconds = () => {
-    this.offset = this.playedFromPosition * this.durationInSeconds * 1000
-    this.elapsedTimeInMilliSeconds = Date.now() -
-      this.playbackStartedAtTimeInMilliseconds + this.offset
+    this.offset = this._playedFromPosition * this._durationInSeconds * 1000
+    this._elapsedTimeInMilliSeconds = Date.now() -
+      this._playbackStartedAtTimeInMilliseconds + this.offset
   }
 
   // ---------------- Main functions ----------------
@@ -145,14 +149,14 @@ export default class OmnitonePlayer {
   async initialize () {
     this.audioContext = new AudioContext()
     this.inputGain = this.audioContext.createGain()
-    if (this.order === 1) {
+    if (this._order === 1) {
       this.ambisonicsRenderer = await Omnitone.createFOARenderer(
         this.audioContext,
-        { channelMap: this.channelMap })
-    } else if (this.order > 1) {
+        { channelMap: this._channelMap })
+    } else if (this._order > 1) {
       this.ambisonicsRenderer = await Omnitone.createHOARenderer(
         this.audioContext,
-        { channelMap: this.channelMap, ambisonicOrder: this.order })
+        { channelMap: this._channelMap, ambisonicOrder: this._order })
     }
     this.ambisonicsRenderer.initialize()
     this.inputGain.connect(this.ambisonicsRenderer.input)
@@ -160,18 +164,18 @@ export default class OmnitonePlayer {
   }
 
   async load () {
-    if (this.order === 1) {
+    if (this._order === 1) {
       const results = await Omnitone.createBufferList(this.audioContext,
-        [this.src])
+        [this._src])
       this.contentBuffer = await Omnitone.mergeBufferListByChannel(
         this.audioContext,
         results,
       )
-    } else if (this.order === 2 || this.order === 3) {
+    } else if (this._order === 2 || this._order === 3) {
       const results = await Omnitone.createBufferList(this.audioContext,
         [
-          OmnitonePlayer.getListOfFileNames(this.src, this.order)[0],
-          OmnitonePlayer.getListOfFileNames(this.src, this.order)[1],
+          OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
+          OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
         ])
       this.contentBuffer = await Omnitone.mergeBufferListByChannel(
         this.audioContext,
@@ -189,25 +193,25 @@ export default class OmnitonePlayer {
     this.currentBufferSource.buffer = this.contentBuffer
     this.currentBufferSource.loop = false
     this.currentBufferSource.connect(this.inputGain)
-    this.playbackStartedAtTimeInMilliseconds = Date.now()
-    this.playedFromPosition = parseFloat(from)
+    this._playbackStartedAtTimeInMilliseconds = Date.now()
+    this._playedFromPosition = parseFloat(from)
     if (this.calcElapsedHandler)
       clearInterval(this.calcElapsedHandler)
     this.calcElapsedHandler = setInterval(
       () => this.updateElapsedTimeInMilliSeconds(), 10)
     this.currentBufferSource.start(0,
-      from * this.durationInSeconds)
-    if (this.order === 1)
+      from * this._durationInSeconds)
+    if (this._order === 1)
       console.log('FOAPlayer playing...')
-    else if (this.order === 2 || this.order === 3)
+    else if (this._order === 2 || this._order === 3)
       console.log('HOAPlayer playing...')
     this.currentBufferSource.onended = () => {
       let lastChanceToStopBeforeEndOfSongInSeconds = 1
-      if (Math.abs(this.durationInSeconds - this.elapsedTimeInSeconds) <
+      if (Math.abs(this._durationInSeconds - this.elapsedTimeInSeconds) <
         lastChanceToStopBeforeEndOfSongInSeconds) {
         clearInterval(this.calcElapsedHandler)
-        this.playedFromPosition = .0
-        this.elapsedTimeInMilliSeconds = 0
+        this._playedFromPosition = .0
+        this._elapsedTimeInMilliSeconds = 0
 
         if (this._loop) {
           this.play(0)
@@ -224,6 +228,7 @@ export default class OmnitonePlayer {
   }
 
   resume = () => {
-    this.play((this.elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds)
+    this.play(
+      (this._elapsedTimeInMilliSeconds / 1000) / this._durationInSeconds)
   }
 }
