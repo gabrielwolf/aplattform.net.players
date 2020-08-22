@@ -13,142 +13,93 @@
 //
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import OmnitonePlayer from './modules/omnitonePlayer.js'
-
-const e = {
-  // First order FuMa example
-  foa: window.foa = new OmnitonePlayer('sounds/foa.flac', 1,
-    [0, 3, 1, 2]),
-
-  // Second order FuMa example
-  soa: window.soa = new OmnitonePlayer('sounds/soa.flac', 2,
-    [0, 3, 1, 2, 6, 7, 5, 8, 4]),
-
-  // Third order ambiX example
-  toa: window.toa = new OmnitonePlayer('sounds/toa.flac', 3),
-
-  // window. is just for debugging purposes, can be removed in production
+import OmnitonePlayer from './modules/omnitonePlayer.js';
+var e = {
+    // First order FuMa example
+    foa: new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2]),
+    // Second order FuMa example
+    soa: new OmnitonePlayer('sounds/soa.flac', 2, [0, 3, 1, 2, 6, 7, 5, 8, 4]),
+    // Third order ambiX example
+    toa: new OmnitonePlayer('sounds/toa.flac', 3, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+};
+var _loop_1 = function (eKey) {
+    document.getElementById(eKey + '-init').addEventListener('click', function () {
+        e[eKey].initialize().then(function () {
+            document.getElementById(eKey + '-init').disabled = true;
+            document.getElementById(eKey + '-load').disabled = false;
+        });
+    });
+    document.getElementById(eKey + '-load').addEventListener('click', function () {
+        document.getElementById(eKey + '-load').disabled = true;
+        document.getElementById(eKey + '-load').innerText = 'Loading...';
+        e[eKey].load().then(function () {
+            document.getElementById(eKey + '-play').disabled = false;
+            document.getElementById(eKey + '-loop').disabled = false;
+            document.getElementById(eKey + '-position').disabled = false;
+            document.getElementById(eKey + '-gain').disabled = false;
+            document.getElementById(eKey + '-progress').disabled = false;
+            document.getElementById(eKey + '-azimuth').disabled = false;
+            document.getElementById(eKey + '-elevation').disabled = false;
+            document.getElementById(eKey + '-load').innerText = 'Loaded';
+            document.getElementById(eKey + '-duration').innerText = secondsToReadableTime(e[eKey].durationInSeconds);
+            document.getElementById(eKey + '-progress').max = e[eKey].durationInSeconds;
+            setInterval(function () {
+                document.getElementById(eKey + '-progress')["value"] = e[eKey].elapsedTimeInSeconds;
+                document.getElementById(eKey + '-current-time').innerText = secondsToReadableTime(e[eKey].elapsedTimeInSeconds);
+            }, 50);
+        });
+    });
+    document.getElementById(eKey + '-play').addEventListener('click', function () {
+        e[eKey].play(document.getElementById(eKey + '-position').value);
+        document.getElementById(eKey + '-stop').disabled = false;
+    });
+    document.getElementById(eKey + '-stop').addEventListener('click', function () {
+        e[eKey].stop();
+        document.getElementById(eKey + '-resume').disabled = false;
+        document.getElementById(eKey + '-position').value = String(e[eKey].elapsedTimeInSeconds / e[eKey].durationInSeconds);
+    });
+    document.getElementById(eKey + '-resume').addEventListener('click', function () {
+        e[eKey].resume();
+        document.getElementById(eKey + '-resume').disabled = true;
+    });
+    document.getElementById(eKey + '-loop').addEventListener('click', function () {
+        e[eKey].loop = document.getElementById(eKey + '-loop').checked;
+    });
+    document.getElementById(eKey + '-progress').addEventListener('click', function (e) {
+        var percentage = (e.pageX - this.offsetLeft) / this.offsetWidth;
+        document.getElementById(eKey + '-position').value = String(percentage);
+        document.getElementById(eKey + '-play').click();
+    });
+    document.getElementById(eKey + '-gain').addEventListener('input', function () {
+        var gain = document.getElementById(eKey + '-gain').value;
+        document.getElementById(eKey + '-gain-label').textContent = gain;
+        e[eKey].gain = gain;
+    });
+    document.getElementById(eKey + '-azimuth').addEventListener('input', function () {
+        var azimuth = parseFloat(document.getElementById(eKey + '-azimuth').value);
+        var elevation = parseFloat(document.getElementById(eKey + '-elevation').value);
+        document.getElementById(eKey + '-azimuth-label').textContent = String(azimuth);
+        document.getElementById(eKey + '-elevation-label').textContent = String(elevation);
+        e[eKey].rotateSoundfield(azimuth, elevation);
+    });
+    document.getElementById(eKey + '-elevation').addEventListener('input', function () {
+        var azimuth = parseFloat(document.getElementById(eKey + '-azimuth').value);
+        var elevation = parseFloat(document.getElementById(eKey + '-elevation').value);
+        document.getElementById(eKey + '-azimuth-label').textContent = String(azimuth);
+        document.getElementById(eKey + '-elevation-label').textContent = String(elevation);
+        e[eKey].rotateSoundfield(azimuth, elevation);
+    });
+};
+for (var eKey in e) {
+    _loop_1(eKey);
 }
-
-for (const eKey in e) {
-
-  document.getElementById(eKey + '-init').
-    addEventListener('click', () => {
-      e[eKey].initialize().then(() => {
-        document.getElementById(eKey + '-init').disabled = true
-        document.getElementById(eKey + '-load').disabled = false
-      })
-    })
-
-  document.getElementById(eKey + '-load').
-    addEventListener('click', () => {
-      document.getElementById(eKey + '-load').disabled = true
-      document.getElementById(eKey + '-load').innerText = 'Loading...'
-      e[eKey].load().then(() => {
-        document.getElementById(eKey + '-play').disabled = false
-        document.getElementById(eKey + '-loop').disabled = false
-        document.getElementById(eKey + '-position').disabled = false
-        document.getElementById(eKey + '-gain').disabled = false
-        document.getElementById(eKey + '-progress').disabled = false
-        document.getElementById(eKey + '-azimuth').disabled = false
-        document.getElementById(eKey + '-elevation').disabled = false
-        document.getElementById(eKey + '-load').innerText = 'Loaded'
-        document.getElementById(
-          eKey + '-duration').innerText = secondsToReadableTime(
-          e[eKey].durationInSeconds,
-        )
-        document.getElementById(
-          eKey + '-progress').max = e[eKey].durationInSeconds
-        setInterval(() => {
-          document.getElementById(
-            eKey + '-progress',
-          ).value = e[eKey].elapsedTimeInSeconds
-          document.getElementById(
-            eKey + '-current-time').innerText = secondsToReadableTime(
-            e[eKey].elapsedTimeInSeconds,
-          )
-        }, 50)
-      })
-    })
-
-  document.getElementById(eKey + '-play').
-    addEventListener('click', () => {
-      e[eKey].play(document.getElementById(eKey + '-position').value)
-      document.getElementById(eKey + '-stop').disabled = false
-    })
-
-  document.getElementById(eKey + '-stop').
-    addEventListener('click', () => {
-      e[eKey].stop()
-      document.getElementById(eKey + '-resume').disabled = false
-      document.getElementById(
-        eKey + '-position').value = e[eKey].elapsedTimeInSeconds /
-        e[eKey].durationInSeconds
-    })
-
-  document.getElementById(eKey + '-resume').
-    addEventListener('click', () => {
-      e[eKey].resume()
-      document.getElementById(eKey + '-resume').disabled = true
-    })
-
-  document.getElementById(eKey + '-loop').
-    addEventListener('click', () => {
-      e[eKey].loop = document.getElementById(eKey + '-loop').checked
-    })
-
-  document.getElementById(eKey + '-progress').
-    addEventListener('click', function (e) {
-      let x = e.pageX - this.offsetLeft,
-        percentage = x / this.offsetWidth
-      console.log(percentage)
-      document.getElementById(eKey + '-position').value = percentage
-      document.getElementById(eKey + '-play').click()
-    })
-
-  document.getElementById(eKey + '-gain').
-    addEventListener('input', () => {
-      const gain = document.getElementById(eKey + '-gain').value
-      document.getElementById(eKey + '-gain-label').textContent = gain
-      e[eKey].gain = gain
-    })
-
-  document.getElementById(eKey + '-azimuth').
-    addEventListener('input', () => {
-      const azimuth = parseFloat(
-        document.getElementById(eKey + '-azimuth').value)
-      const elevation = parseFloat(
-        document.getElementById(eKey + '-elevation').value)
-      document.getElementById(eKey + '-azimuth-label').
-        textContent = String(azimuth)
-      document.getElementById(eKey + '-elevation-label').
-        textContent = String(elevation)
-      e[eKey].rotateSoundfield(azimuth, elevation)
-    })
-
-  document.getElementById(eKey + '-elevation').
-    addEventListener('input', () => {
-      const azimuth = parseFloat(
-        document.getElementById(eKey + '-azimuth').value)
-      const elevation = parseFloat(
-        document.getElementById(eKey + '-elevation').value)
-      document.getElementById(eKey + '-azimuth-label').
-        textContent = String(azimuth)
-      document.getElementById(eKey + '-elevation-label').
-        textContent = String(elevation)
-      e[eKey].rotateSoundfield(azimuth, elevation)
-    })
-
-}
-
-function secondsToReadableTime (seconds) {
-  let time = new Date(null)
-  time.setSeconds(seconds)
-  time = time.toISOString()
-  time = (seconds > 3600)
-    ? time.substr(11, 8)
-    : time.substr(14, 5)
-  time = (time.substr(0, 1) === '0') ? time.substring(1) : time
-  return String(time)
+function secondsToReadableTime(seconds) {
+    var time = new Date(0, 0, 0, 0, 0, 0, 0);
+    time.setSeconds(seconds);
+    var timeString = time.toISOString();
+    timeString = (seconds > 3600)
+        ? timeString.substr(11, 8)
+        : timeString.substr(14, 5);
+    timeString = (timeString.substr(0, 1) === '0') ? timeString.substring(1) : timeString;
+    return String(timeString);
 }

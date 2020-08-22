@@ -13,222 +13,267 @@
 //
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
-
-export default class OmnitonePlayer {
-  constructor (src, order, channelMap) {
-    this._src = src
-    this._order = order
-    this._channelMap = channelMap
-    this._playbackStartedAtTimeInMilliseconds = 0
-    this._playedFromPosition = .0
-    this._elapsedTimeInMilliSeconds = 0
-    this._durationInSeconds = 0
-    this._loop = false
-  }
-
-  get elapsedTimeInSeconds () {
-    return this._elapsedTimeInMilliSeconds / 1000
-  }
-
-  get durationInSeconds () {
-    return this._durationInSeconds
-  }
-
-  get loop () {
-    return this._loop
-  }
-
-  set loop (value) {
-    this._loop = value
-  }
-
-  set gain (gain) {
-    this.inputGain.gain.exponentialRampToValueAtTime(
-      Math.pow(10, parseFloat(gain) / 20),
-      this.audioContext.currentTime + 0.2,
-    )
-  }
-
-  static crossProduct (a, b) {
-    return [
-      a[1] * b[2] - a[2] * b[1],
-      a[2] * b[0] - a[0] * b[2],
-      a[0] * b[1] - a[1] * b[0],
-    ]
-  }
-
-  static getListOfFileNames (src, order) {
-    let listOfFileNames = []
-    let postfix
-
-    switch (order) {
-      case 1:
-        postfix = ['']
-        break
-
-      case 2:
-        postfix = ['_ch0-7', '_ch8']
-        break
-
-      case 3:
-        postfix = ['_ch0-7', '_ch8-15']
-        break
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-
-    for (let i = 0; i < postfix.length; ++i) {
-      listOfFileNames.push(
-        src.substring(0, src.length - src.split('.').pop().length - 1)
-        + postfix[i]
-        + '.' + src.split('.').pop(),
-      )
+};
+// @ts-ignore
+import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js';
+var OmnitonePlayer = /** @class */ (function () {
+    function OmnitonePlayer(src, order, channelMap) {
+        var _this = this;
+        this.finalizeLoading = function () {
+            _this.rotateSoundfield(0, 0);
+            _this._durationInSeconds = _this._contentBuffer.length /
+                _this._contentBuffer.sampleRate;
+        };
+        this.clearCurrentBufferSource = function () {
+            _this._currentBufferSource.stop();
+            _this._currentBufferSource.disconnect();
+        };
+        this.updateElapsedTimeInMilliSeconds = function () {
+            _this._offset = _this._playedFromPosition * _this._durationInSeconds * 1000;
+            _this._elapsedTimeInMilliSeconds = Date.now() -
+                _this._playbackStartedAtTimeInMilliseconds + _this._offset;
+        };
+        this.play = function (from) {
+            if (_this._currentBufferSource) {
+                _this.clearCurrentBufferSource();
+            }
+            _this._currentBufferSource = _this._audioContext.createBufferSource();
+            _this._currentBufferSource.buffer = _this._contentBuffer;
+            _this._currentBufferSource.loop = false;
+            _this._currentBufferSource.connect(_this._inputGain);
+            _this._playbackStartedAtTimeInMilliseconds = Date.now();
+            _this._playedFromPosition = from;
+            if (_this._calcElapsedHandler)
+                clearInterval(_this._calcElapsedHandler);
+            _this._calcElapsedHandler = setInterval(function () { return _this.updateElapsedTimeInMilliSeconds(); }, 10);
+            _this._currentBufferSource.start(0, from * _this._durationInSeconds);
+            if (_this._order === 1)
+                console.log('FOAPlayer playing...');
+            else if (_this._order === 2 || _this._order === 3)
+                console.log('HOAPlayer playing...');
+            _this._currentBufferSource.onended = function () {
+                var lastChanceToStopBeforeEndOfSongInSeconds = 1;
+                if (Math.abs(_this._durationInSeconds - _this.elapsedTimeInSeconds) <
+                    lastChanceToStopBeforeEndOfSongInSeconds) {
+                    clearInterval(_this._calcElapsedHandler);
+                    _this._playedFromPosition = .0;
+                    _this._elapsedTimeInMilliSeconds = 0;
+                    if (_this._loop) {
+                        _this.play(0);
+                    }
+                }
+            };
+        };
+        this.stop = function () {
+            if (_this._currentBufferSource) {
+                clearInterval(_this._calcElapsedHandler);
+                _this.clearCurrentBufferSource();
+            }
+        };
+        this.resume = function () {
+            _this.play((_this._elapsedTimeInMilliSeconds / 1000) / _this._durationInSeconds);
+        };
+        this._src = src;
+        this._order = order;
+        this._channelMap = channelMap;
+        this._playbackStartedAtTimeInMilliseconds = 0;
+        this._playedFromPosition = .0;
+        this._elapsedTimeInMilliSeconds = 0;
+        this._offset = 0;
+        this._calcElapsedHandler = 0;
+        this._durationInSeconds = 0;
+        this._loop = false;
     }
-    return listOfFileNames
-  }
-
-  static normalize (a) {
-    const n = Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2])
-    a[0] /= n
-    a[1] /= n
-    a[2] /= n
-    return a
-  }
-
-  // ---------------- Helpers ----------------
-
-  rotateSoundfield (azimuth, elevation) {
-    const rotationMatrix3 = new Float32Array(9)
-
-    const theta = azimuth / 180 * Math.PI
-    const phi = elevation / 180 * Math.PI
-
-    const forward = [
-      Math.sin(theta) * Math.cos(phi),
-      Math.sin(phi),
-      Math.cos(theta) * Math.cos(phi),
-    ]
-    const upInitial = [0, 1, 0]
-    const right = OmnitonePlayer.normalize(
-      OmnitonePlayer.crossProduct(forward, upInitial))
-    const up = OmnitonePlayer.normalize(
-      OmnitonePlayer.crossProduct(right, forward))
-
-    rotationMatrix3[0] = right[0]
-    rotationMatrix3[1] = right[1]
-    rotationMatrix3[2] = right[2]
-    rotationMatrix3[3] = up[0]
-    rotationMatrix3[4] = up[1]
-    rotationMatrix3[5] = up[2]
-    rotationMatrix3[6] = forward[0]
-    rotationMatrix3[7] = forward[1]
-    rotationMatrix3[8] = forward[2]
-
-    this.ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
-  }
-
-  finalizeLoading = () => {
-    this.rotateSoundfield(0, 0)
-    this._durationInSeconds = this.contentBuffer.length /
-      this.contentBuffer.sampleRate
-  }
-
-  clearCurrentBufferSource = () => {
-    this.currentBufferSource.stop()
-    this.currentBufferSource.disconnect()
-  }
-
-  updateElapsedTimeInMilliSeconds = () => {
-    this.offset = this._playedFromPosition * this._durationInSeconds * 1000
-    this._elapsedTimeInMilliSeconds = Date.now() -
-      this._playbackStartedAtTimeInMilliseconds + this.offset
-  }
-
-  // ---------------- Main functions ----------------
-
-  async initialize () {
-    this.audioContext = new AudioContext()
-    this.inputGain = this.audioContext.createGain()
-    if (this._order === 1) {
-      this.ambisonicsRenderer = await Omnitone.createFOARenderer(
-        this.audioContext,
-        { channelMap: this._channelMap })
-    } else if (this._order > 1) {
-      this.ambisonicsRenderer = await Omnitone.createHOARenderer(
-        this.audioContext,
-        { channelMap: this._channelMap, ambisonicOrder: this._order })
-    }
-    this.ambisonicsRenderer.initialize()
-    this.inputGain.connect(this.ambisonicsRenderer.input)
-    this.ambisonicsRenderer.output.connect(this.audioContext.destination)
-  }
-
-  async load () {
-    if (this._order === 1) {
-      const results = await Omnitone.createBufferList(this.audioContext,
-        [this._src])
-      this.contentBuffer = await Omnitone.mergeBufferListByChannel(
-        this.audioContext,
-        results,
-      )
-    } else if (this._order === 2 || this._order === 3) {
-      const results = await Omnitone.createBufferList(this.audioContext,
-        [
-          OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
-          OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
-        ])
-      this.contentBuffer = await Omnitone.mergeBufferListByChannel(
-        this.audioContext,
-        results,
-      )
-    }
-    this.finalizeLoading()
-  }
-
-  play = (from) => {
-    if (this.currentBufferSource) {
-      this.clearCurrentBufferSource()
-    }
-    this.currentBufferSource = this.audioContext.createBufferSource()
-    this.currentBufferSource.buffer = this.contentBuffer
-    this.currentBufferSource.loop = false
-    this.currentBufferSource.connect(this.inputGain)
-    this._playbackStartedAtTimeInMilliseconds = Date.now()
-    this._playedFromPosition = parseFloat(from)
-    if (this.calcElapsedHandler)
-      clearInterval(this.calcElapsedHandler)
-    this.calcElapsedHandler = setInterval(
-      () => this.updateElapsedTimeInMilliSeconds(), 10)
-    this.currentBufferSource.start(0,
-      from * this._durationInSeconds)
-    if (this._order === 1)
-      console.log('FOAPlayer playing...')
-    else if (this._order === 2 || this._order === 3)
-      console.log('HOAPlayer playing...')
-    this.currentBufferSource.onended = () => {
-      let lastChanceToStopBeforeEndOfSongInSeconds = 1
-      if (Math.abs(this._durationInSeconds - this.elapsedTimeInSeconds) <
-        lastChanceToStopBeforeEndOfSongInSeconds) {
-        clearInterval(this.calcElapsedHandler)
-        this._playedFromPosition = .0
-        this._elapsedTimeInMilliSeconds = 0
-
-        if (this._loop) {
-          this.play(0)
+    Object.defineProperty(OmnitonePlayer.prototype, "loop", {
+        get: function () {
+            return this._loop;
+        },
+        set: function (value) {
+            this._loop = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(OmnitonePlayer.prototype, "durationInSeconds", {
+        get: function () {
+            return this._durationInSeconds;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(OmnitonePlayer.prototype, "elapsedTimeInSeconds", {
+        get: function () {
+            return this._elapsedTimeInMilliSeconds / 1000;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(OmnitonePlayer.prototype, "gain", {
+        set: function (gain) {
+            this._inputGain.gain.exponentialRampToValueAtTime(Math.pow(10, parseFloat(gain) / 20), this._audioContext.currentTime + 0.2);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    OmnitonePlayer.crossProduct = function (a, b) {
+        return [
+            a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0],
+        ];
+    };
+    OmnitonePlayer.getListOfFileNames = function (src, order) {
+        var listOfFileNames = [], postfix = [];
+        switch (order) {
+            case 1:
+                postfix = [''];
+                break;
+            case 2:
+                postfix = ['_ch0-7', '_ch8'];
+                break;
+            case 3:
+                postfix = ['_ch0-7', '_ch8-15'];
+                break;
         }
-      }
-    }
-  }
-
-  stop = () => {
-    if (this.currentBufferSource) {
-      clearInterval(this.calcElapsedHandler)
-      this.clearCurrentBufferSource()
-    }
-  }
-
-  resume = () => {
-    this.play(
-      (this._elapsedTimeInMilliSeconds / 1000) / this._durationInSeconds)
-  }
-}
+        postfix.forEach(function (item) {
+            listOfFileNames.push(src.substring(0, src.length - src.split('.').pop().length - 1)
+                + item
+                + '.' + src.split('.').pop());
+        });
+        return listOfFileNames;
+    };
+    OmnitonePlayer.normalize = function (a) {
+        var n = Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+        a[0] /= n;
+        a[1] /= n;
+        a[2] /= n;
+        return a;
+    };
+    // ---------------- Helpers ----------------
+    OmnitonePlayer.prototype.rotateSoundfield = function (azimuth, elevation) {
+        var rotationMatrix3 = new Float32Array(9);
+        var theta = azimuth / 180 * Math.PI;
+        var phi = elevation / 180 * Math.PI;
+        var forward = [
+            Math.sin(theta) * Math.cos(phi),
+            Math.sin(phi),
+            Math.cos(theta) * Math.cos(phi),
+        ];
+        var upInitial = [0, 1, 0];
+        var right = OmnitonePlayer.normalize(OmnitonePlayer.crossProduct(forward, upInitial));
+        var up = OmnitonePlayer.normalize(OmnitonePlayer.crossProduct(right, forward));
+        rotationMatrix3[0] = right[0];
+        rotationMatrix3[1] = right[1];
+        rotationMatrix3[2] = right[2];
+        rotationMatrix3[3] = up[0];
+        rotationMatrix3[4] = up[1];
+        rotationMatrix3[5] = up[2];
+        rotationMatrix3[6] = forward[0];
+        rotationMatrix3[7] = forward[1];
+        rotationMatrix3[8] = forward[2];
+        this._ambisonicsRenderer.setRotationMatrix3(rotationMatrix3);
+    };
+    // ---------------- Main functions ----------------
+    OmnitonePlayer.prototype.initialize = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        this._audioContext = new AudioContext();
+                        this._inputGain = this._audioContext.createGain();
+                        if (!(this._order === 1)) return [3 /*break*/, 2];
+                        _a = this;
+                        return [4 /*yield*/, Omnitone.createFOARenderer(this._audioContext, { channelMap: this._channelMap })];
+                    case 1:
+                        _a._ambisonicsRenderer = _c.sent();
+                        return [3 /*break*/, 4];
+                    case 2:
+                        if (!(this._order > 1)) return [3 /*break*/, 4];
+                        _b = this;
+                        return [4 /*yield*/, Omnitone.createHOARenderer(this._audioContext, { channelMap: this._channelMap, ambisonicOrder: this._order })];
+                    case 3:
+                        _b._ambisonicsRenderer = _c.sent();
+                        _c.label = 4;
+                    case 4:
+                        this._ambisonicsRenderer.initialize();
+                        this._inputGain.connect(this._ambisonicsRenderer.input);
+                        this._ambisonicsRenderer.output.connect(this._audioContext.destination);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OmnitonePlayer.prototype.load = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var results, _a, results, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        if (!(this._order === 1)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [this._src])];
+                    case 1:
+                        results = _c.sent();
+                        _a = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 2:
+                        _a._contentBuffer = _c.sent();
+                        return [3 /*break*/, 6];
+                    case 3:
+                        if (!(this._order === 2 || this._order === 3)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
+                            ])];
+                    case 4:
+                        results = _c.sent();
+                        _b = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 5:
+                        _b._contentBuffer = _c.sent();
+                        _c.label = 6;
+                    case 6:
+                        this.finalizeLoading();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return OmnitonePlayer;
+}());
+export default OmnitonePlayer;
