@@ -7,7 +7,7 @@
 //    (at your option) any later version.
 //
 //    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    but WITHOUT ANY WARRANTY without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU Affero General Public License for more details.
 //
@@ -15,24 +15,24 @@
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // @ts-ignore
-import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js';
+import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js'
 
 export default class OmnitonePlayer {
-    private readonly _src: string;
-    private readonly _order: number;
-    private readonly _channelMap: number[];
+    private readonly _src: string
+    private readonly _order: number
+    private readonly _channelMap: number[]
 
-    private _playbackStartedAtTimeInMilliseconds: number;
-    private _playedFromPosition: number;
-    private _elapsedTimeInMilliSeconds: number;
-    private _offset: number;
-    private _calcElapsedHandler: number;
+    private _playbackStartedAtTimeInMilliseconds: number
+    private _playedFromPosition: number
+    private _elapsedTimeInMilliSeconds: number
+    private _offset: number
+    private _calcElapsedHandler: number
 
-    private _audioContext: any;
-    private _inputGain: any;
-    private _contentBuffer: any;
-    private _ambisonicsRenderer: any;
-    private _currentBufferSource: any;
+    private _audioContext: any
+    private _inputGain: any
+    private _contentBuffer: any
+    private _ambisonicsRenderer: any
+    private _currentBufferSource: any
 
     constructor(src: string, order: number, channelMap: number[]) {
         this._src = src
@@ -47,7 +47,7 @@ export default class OmnitonePlayer {
         this._loop = false
     }
 
-    private _loop: boolean;
+    private _loop: boolean
 
     get loop() {
         return this._loop
@@ -57,7 +57,7 @@ export default class OmnitonePlayer {
         this._loop = value
     }
 
-    private _durationInSeconds: number;
+    private _durationInSeconds: number
 
     get durationInSeconds() {
         return this._durationInSeconds
@@ -82,8 +82,11 @@ export default class OmnitonePlayer {
         ]
     }
 
-    static getListOfFileNames(src: string, order: number) {
-        let listOfFileNames: string[] = [], postfix: string[] = [];
+    static getListOfFileNames(src: string, order: number): string[] {
+        if (!src.indexOf('.'))
+            Error("Filename has no extension!")
+
+        let listOfFileNames: string[] = [], postfix: string[] = []
 
         switch (order) {
             case 1:
@@ -99,13 +102,16 @@ export default class OmnitonePlayer {
                 break
         }
 
+        let file: string[] = src.split('.')
+        let extension: string = <string>file.pop()
+
         postfix.forEach(item => {
             listOfFileNames.push(
-                src.substring(0, src.length - src.split('.').pop().length - 1)
+                src.substring(0, src.length - extension.length - 1)
                 + item
                 + '.' + src.split('.').pop(),
             )
-        });
+        })
         return listOfFileNames
     }
 
@@ -185,7 +191,7 @@ export default class OmnitonePlayer {
         this._ambisonicsRenderer.output.connect(this._audioContext.destination)
     }
 
-    async load() {
+    load = async () => {
         if (this._order === 1) {
             const results = await Omnitone.createBufferList(this._audioContext,
                 [this._src])

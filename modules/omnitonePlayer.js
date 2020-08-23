@@ -7,7 +7,7 @@
 //    (at your option) any later version.
 //
 //    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    but WITHOUT ANY WARRANTY without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU Affero General Public License for more details.
 //
@@ -68,6 +68,39 @@ var OmnitonePlayer = /** @class */ (function () {
             _this._elapsedTimeInMilliSeconds = Date.now() -
                 _this._playbackStartedAtTimeInMilliseconds + _this._offset;
         };
+        this.load = function () { return __awaiter(_this, void 0, void 0, function () {
+            var results, _a, results, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        if (!(this._order === 1)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [this._src])];
+                    case 1:
+                        results = _c.sent();
+                        _a = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 2:
+                        _a._contentBuffer = _c.sent();
+                        return [3 /*break*/, 6];
+                    case 3:
+                        if (!(this._order === 2 || this._order === 3)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
+                            ])];
+                    case 4:
+                        results = _c.sent();
+                        _b = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 5:
+                        _b._contentBuffer = _c.sent();
+                        _c.label = 6;
+                    case 6:
+                        this.finalizeLoading();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
         this.play = function (from) {
             if (_this._currentBufferSource) {
                 _this.clearCurrentBufferSource();
@@ -158,6 +191,8 @@ var OmnitonePlayer = /** @class */ (function () {
         ];
     };
     OmnitonePlayer.getListOfFileNames = function (src, order) {
+        if (!src.indexOf('.'))
+            Error("Filename has no extension!");
         var listOfFileNames = [], postfix = [];
         switch (order) {
             case 1:
@@ -170,8 +205,10 @@ var OmnitonePlayer = /** @class */ (function () {
                 postfix = ['_ch0-7', '_ch8-15'];
                 break;
         }
+        var file = src.split('.');
+        var extension = file.pop();
         postfix.forEach(function (item) {
-            listOfFileNames.push(src.substring(0, src.length - src.split('.').pop().length - 1)
+            listOfFileNames.push(src.substring(0, src.length - extension.length - 1)
                 + item
                 + '.' + src.split('.').pop());
         });
@@ -234,41 +271,6 @@ var OmnitonePlayer = /** @class */ (function () {
                         this._ambisonicsRenderer.initialize();
                         this._inputGain.connect(this._ambisonicsRenderer.input);
                         this._ambisonicsRenderer.output.connect(this._audioContext.destination);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    OmnitonePlayer.prototype.load = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var results, _a, results, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        if (!(this._order === 1)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [this._src])];
-                    case 1:
-                        results = _c.sent();
-                        _a = this;
-                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
-                    case 2:
-                        _a._contentBuffer = _c.sent();
-                        return [3 /*break*/, 6];
-                    case 3:
-                        if (!(this._order === 2 || this._order === 3)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [
-                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
-                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
-                            ])];
-                    case 4:
-                        results = _c.sent();
-                        _b = this;
-                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
-                    case 5:
-                        _b._contentBuffer = _c.sent();
-                        _c.label = 6;
-                    case 6:
-                        this.finalizeLoading();
                         return [2 /*return*/];
                 }
             });
