@@ -193,6 +193,8 @@ var OmnitonePlayer = /** @class */ (function () {
     OmnitonePlayer.getListOfFileNames = function (src, order) {
         if (!src.indexOf('.'))
             Error("Filename has no extension!");
+        var file = src.split('.');
+        var extension = file.pop();
         var listOfFileNames = [], postfix = [];
         switch (order) {
             case 1:
@@ -205,8 +207,6 @@ var OmnitonePlayer = /** @class */ (function () {
                 postfix = ['_ch0-7', '_ch8-15'];
                 break;
         }
-        var file = src.split('.');
-        var extension = file.pop();
         postfix.forEach(function (item) {
             listOfFileNames.push(src.substring(0, src.length - extension.length - 1)
                 + item

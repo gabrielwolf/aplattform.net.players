@@ -86,6 +86,9 @@ export default class OmnitonePlayer {
         if (!src.indexOf('.'))
             Error("Filename has no extension!")
 
+        let file: string[] = src.split('.')
+        let extension: string = <string>file.pop()
+
         let listOfFileNames: string[] = [], postfix: string[] = []
 
         switch (order) {
@@ -101,9 +104,6 @@ export default class OmnitonePlayer {
                 postfix = ['_ch0-7', '_ch8-15']
                 break
         }
-
-        let file: string[] = src.split('.')
-        let extension: string = <string>file.pop()
 
         postfix.forEach(item => {
             listOfFileNames.push(
