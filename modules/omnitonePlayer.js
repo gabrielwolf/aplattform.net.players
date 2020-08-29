@@ -68,79 +68,6 @@ var OmnitonePlayer = /** @class */ (function () {
             _this._elapsedTimeInMilliSeconds = Date.now() -
                 _this._playbackStartedAtTimeInMilliseconds + _this._offset;
         };
-        this.load = function () { return __awaiter(_this, void 0, void 0, function () {
-            var results, _a, results, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        if (!(this._order === 1)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [this._src])];
-                    case 1:
-                        results = _c.sent();
-                        _a = this;
-                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
-                    case 2:
-                        _a._contentBuffer = _c.sent();
-                        return [3 /*break*/, 6];
-                    case 3:
-                        if (!(this._order === 2 || this._order === 3)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [
-                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
-                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
-                            ])];
-                    case 4:
-                        results = _c.sent();
-                        _b = this;
-                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
-                    case 5:
-                        _b._contentBuffer = _c.sent();
-                        _c.label = 6;
-                    case 6:
-                        this.finalizeLoading();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        this.play = function (from) {
-            if (_this._currentBufferSource) {
-                _this.clearCurrentBufferSource();
-            }
-            _this._currentBufferSource = _this._audioContext.createBufferSource();
-            _this._currentBufferSource.buffer = _this._contentBuffer;
-            _this._currentBufferSource.loop = false;
-            _this._currentBufferSource.connect(_this._inputGain);
-            _this._playbackStartedAtTimeInMilliseconds = Date.now();
-            _this._playedFromPosition = from;
-            if (_this._calcElapsedHandler)
-                clearInterval(_this._calcElapsedHandler);
-            _this._calcElapsedHandler = setInterval(function () { return _this.updateElapsedTimeInMilliSeconds(); }, 10);
-            _this._currentBufferSource.start(0, from * _this._durationInSeconds);
-            if (_this._order === 1)
-                console.log('FOAPlayer playing...');
-            else if (_this._order === 2 || _this._order === 3)
-                console.log('HOAPlayer playing...');
-            _this._currentBufferSource.onended = function () {
-                var lastChanceToStopBeforeEndOfSongInSeconds = 1;
-                if (Math.abs(_this._durationInSeconds - _this.elapsedTimeInSeconds) <
-                    lastChanceToStopBeforeEndOfSongInSeconds) {
-                    clearInterval(_this._calcElapsedHandler);
-                    _this._playedFromPosition = .0;
-                    _this._elapsedTimeInMilliSeconds = 0;
-                    if (_this._loop) {
-                        _this.play(0);
-                    }
-                }
-            };
-        };
-        this.stop = function () {
-            if (_this._currentBufferSource) {
-                clearInterval(_this._calcElapsedHandler);
-                _this.clearCurrentBufferSource();
-            }
-        };
-        this.resume = function () {
-            _this.play((_this._elapsedTimeInMilliSeconds / 1000) / _this._durationInSeconds);
-        };
         this._src = src;
         this._order = order;
         this._channelMap = channelMap;
@@ -246,7 +173,7 @@ var OmnitonePlayer = /** @class */ (function () {
         this._ambisonicsRenderer.setRotationMatrix3(rotationMatrix3);
     };
     // ---------------- Main functions ----------------
-    OmnitonePlayer.prototype.initialize = function () {
+    OmnitonePlayer.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {
@@ -275,6 +202,82 @@ var OmnitonePlayer = /** @class */ (function () {
                 }
             });
         });
+    };
+    OmnitonePlayer.prototype.load = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var results, _a, results, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        if (!(this._order === 1)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [this._src])];
+                    case 1:
+                        results = _c.sent();
+                        _a = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 2:
+                        _a._contentBuffer = _c.sent();
+                        return [3 /*break*/, 6];
+                    case 3:
+                        if (!(this._order === 2 || this._order === 3)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, Omnitone.createBufferList(this._audioContext, [
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[0],
+                                OmnitonePlayer.getListOfFileNames(this._src, this._order)[1],
+                            ])];
+                    case 4:
+                        results = _c.sent();
+                        _b = this;
+                        return [4 /*yield*/, Omnitone.mergeBufferListByChannel(this._audioContext, results)];
+                    case 5:
+                        _b._contentBuffer = _c.sent();
+                        _c.label = 6;
+                    case 6:
+                        this.finalizeLoading();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OmnitonePlayer.prototype.play = function (from) {
+        var _this = this;
+        if (this._currentBufferSource) {
+            this.clearCurrentBufferSource();
+        }
+        this._currentBufferSource = this._audioContext.createBufferSource();
+        this._currentBufferSource.buffer = this._contentBuffer;
+        this._currentBufferSource.loop = false;
+        this._currentBufferSource.connect(this._inputGain);
+        this._playbackStartedAtTimeInMilliseconds = Date.now();
+        this._playedFromPosition = from;
+        if (this._calcElapsedHandler)
+            clearInterval(this._calcElapsedHandler);
+        this._calcElapsedHandler = setInterval(function () { return _this.updateElapsedTimeInMilliSeconds(); }, 10);
+        this._currentBufferSource.start(0, from * this._durationInSeconds);
+        if (this._order === 1)
+            console.log('FOAPlayer playing...');
+        else if (this._order === 2 || this._order === 3)
+            console.log('HOAPlayer playing...');
+        this._currentBufferSource.onended = function () {
+            var lastChanceToStopBeforeEndOfSongInSeconds = 1;
+            if (Math.abs(_this._durationInSeconds - _this.elapsedTimeInSeconds) <
+                lastChanceToStopBeforeEndOfSongInSeconds) {
+                clearInterval(_this._calcElapsedHandler);
+                _this._playedFromPosition = .0;
+                _this._elapsedTimeInMilliSeconds = 0;
+                if (_this._loop) {
+                    _this.play(0);
+                }
+            }
+        };
+    };
+    OmnitonePlayer.prototype.stop = function () {
+        if (this._currentBufferSource) {
+            clearInterval(this._calcElapsedHandler);
+            this.clearCurrentBufferSource();
+        }
+    };
+    OmnitonePlayer.prototype.resume = function () {
+        this.play((this._elapsedTimeInMilliSeconds / 1000) / this._durationInSeconds);
     };
     return OmnitonePlayer;
 }());

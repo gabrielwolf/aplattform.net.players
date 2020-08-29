@@ -17,123 +17,123 @@
 import OmnitonePlayer from './modules/omnitonePlayer.js'
 
 const e: {
-    [index: string]: any
+  [index: string]: any
 } = {
-    // First order FuMa example
-    foa: new OmnitonePlayer('sounds/foa.flac', 1,
-        [0, 3, 1, 2]),
+  // First order FuMa example
+  foa: new OmnitonePlayer('sounds/foa.flac', 1,
+      [0, 3, 1, 2]),
 
-    // Second order FuMa example
-    soa: new OmnitonePlayer('sounds/soa.flac', 2,
-        [0, 3, 1, 2, 6, 7, 5, 8, 4]),
+  // Second order FuMa example
+  soa: new OmnitonePlayer('sounds/soa.flac', 2,
+      [0, 3, 1, 2, 6, 7, 5, 8, 4]),
 
-    // Third order ambiX example
-    toa: new OmnitonePlayer('sounds/toa.flac', 3,
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+  // Third order ambiX example
+  toa: new OmnitonePlayer('sounds/toa.flac', 3,
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 };
 
 for (const eKey in e) {
 
-    (document.getElementById(eKey + '-init') as HTMLButtonElement).addEventListener('click', () => {
-        e[eKey].initialize().then(() => {
-            (document.getElementById(eKey + '-init') as HTMLButtonElement).disabled = true;
-            (document.getElementById(eKey + '-load') as HTMLButtonElement).disabled = false;
-        })
-    });
+  (document.getElementById(eKey + '-init') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].init().then(() => {
+      (document.getElementById(eKey + '-init') as HTMLButtonElement).disabled = true;
+      (document.getElementById(eKey + '-load') as HTMLButtonElement).disabled = false;
+    })
+  });
 
-    (document.getElementById(eKey + '-load') as HTMLButtonElement).addEventListener('click', () => {
-        ((document.getElementById(eKey + '-load') as HTMLButtonElement) as HTMLButtonElement).disabled = true;
-        (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loading...'
-        e[eKey].load().then(() => {
-            (document.getElementById(eKey + '-play') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-loop') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-position') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-gain') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-progress') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-azimuth') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-elevation') as HTMLButtonElement).disabled = false;
-            (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loaded';
-            (document.getElementById(
-                eKey + '-duration') as HTMLButtonElement).innerText = secondsToReadableTime(
-                e[eKey].durationInSeconds,
-            );
-            (document.getElementById(
-                eKey + '-progress') as HTMLProgressElement).max = e[eKey].durationInSeconds
-            setInterval(() => {
-                (document.getElementById(
-                    eKey + '-progress',
-                ) as HTMLProgressElement)["value"] = e[eKey].elapsedTimeInSeconds;
-                (document.getElementById(
-                    eKey + '-current-time') as HTMLSpanElement).innerText = secondsToReadableTime(
-                    e[eKey].elapsedTimeInSeconds,
-                )
-            }, 50)
-        })
-    });
-
-    (document.getElementById(eKey + '-play') as HTMLButtonElement).addEventListener('click', () => {
-        e[eKey].play((document.getElementById(eKey + '-position') as HTMLButtonElement).value);
-        (document.getElementById(eKey + '-stop') as HTMLButtonElement).disabled = false;
-    });
-
-    (document.getElementById(eKey + '-stop') as HTMLButtonElement).addEventListener('click', () => {
-        e[eKey].stop();
-        (document.getElementById(eKey + '-resume') as HTMLButtonElement).disabled = false;
-        (document.getElementById(eKey + '-position') as HTMLInputElement).value = String(
-            e[eKey].elapsedTimeInSeconds / e[eKey].durationInSeconds
+  (document.getElementById(eKey + '-load') as HTMLButtonElement).addEventListener('click', () => {
+    ((document.getElementById(eKey + '-load') as HTMLButtonElement) as HTMLButtonElement).disabled = true;
+    (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loading...'
+    e[eKey].load().then(() => {
+      (document.getElementById(eKey + '-play') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-loop') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-position') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-gain') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-progress') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-azimuth') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-elevation') as HTMLButtonElement).disabled = false;
+      (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loaded';
+      (document.getElementById(
+          eKey + '-duration') as HTMLButtonElement).innerText = secondsToReadableTime(
+          e[eKey].durationInSeconds,
+      );
+      (document.getElementById(
+          eKey + '-progress') as HTMLProgressElement).max = e[eKey].durationInSeconds
+      setInterval(() => {
+        (document.getElementById(
+            eKey + '-progress',
+        ) as HTMLProgressElement)["value"] = e[eKey].elapsedTimeInSeconds;
+        (document.getElementById(
+            eKey + '-current-time') as HTMLSpanElement).innerText = secondsToReadableTime(
+            e[eKey].elapsedTimeInSeconds,
         )
-    });
+      }, 50)
+    })
+  });
 
-    (document.getElementById(eKey + '-resume') as HTMLButtonElement).addEventListener('click', () => {
-        e[eKey].resume();
-        (document.getElementById(eKey + '-resume') as HTMLButtonElement).disabled = true;
-    });
+  (document.getElementById(eKey + '-play') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].play((document.getElementById(eKey + '-position') as HTMLButtonElement).value);
+    (document.getElementById(eKey + '-stop') as HTMLButtonElement).disabled = false;
+  });
 
-    (document.getElementById(eKey + '-loop') as HTMLButtonElement).addEventListener('click', () => {
-        e[eKey].loop = (document.getElementById(eKey + '-loop') as HTMLInputElement).checked
-    });
+  (document.getElementById(eKey + '-stop') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].stop();
+    (document.getElementById(eKey + '-resume') as HTMLButtonElement).disabled = false;
+    (document.getElementById(eKey + '-position') as HTMLInputElement).value = String(
+        e[eKey].elapsedTimeInSeconds / e[eKey].durationInSeconds
+    )
+  });
 
-    (document.getElementById(eKey + '-progress') as HTMLButtonElement).addEventListener('click', function (e) {
-        let percentage = (e.pageX - this.offsetLeft) / this.offsetWidth;
-        (document.getElementById(eKey + '-position') as HTMLInputElement).value = String(percentage);
-        (document.getElementById(eKey + '-play') as HTMLButtonElement).click();
-    });
+  (document.getElementById(eKey + '-resume') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].resume();
+    (document.getElementById(eKey + '-resume') as HTMLButtonElement).disabled = true;
+  });
 
-    (document.getElementById(eKey + '-gain') as HTMLInputElement).addEventListener('input', () => {
-        const gain = (document.getElementById(eKey + '-gain') as HTMLInputElement).value;
-        (document.getElementById(eKey + '-gain-label') as HTMLSpanElement).textContent = gain;
-        e[eKey].gain = gain;
-    });
+  (document.getElementById(eKey + '-loop') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].loop = (document.getElementById(eKey + '-loop') as HTMLInputElement).checked
+  });
 
-    (document.getElementById(eKey + '-azimuth') as HTMLInputElement).addEventListener('input', () => {
-        const azimuth = parseFloat(
-            (document.getElementById(eKey + '-azimuth') as HTMLInputElement).value);
-        const elevation = parseFloat(
-            (document.getElementById(eKey + '-elevation') as HTMLInputElement).value);
-        (document.getElementById(eKey + '-azimuth-label') as HTMLSpanElement).textContent = String(azimuth);
-        (document.getElementById(eKey + '-elevation-label') as HTMLSpanElement).textContent = String(elevation);
-        e[eKey].rotateSoundfield(azimuth, elevation);
-    });
+  (document.getElementById(eKey + '-progress') as HTMLButtonElement).addEventListener('click', function (e) {
+    let percentage = (e.pageX - this.offsetLeft) / this.offsetWidth;
+    (document.getElementById(eKey + '-position') as HTMLInputElement).value = String(percentage);
+    (document.getElementById(eKey + '-play') as HTMLButtonElement).click();
+  });
 
-    (document.getElementById(eKey + '-elevation') as HTMLInputElement).addEventListener('input', () => {
-        const azimuth = parseFloat(
-            (document.getElementById(eKey + '-azimuth') as HTMLInputElement).value);
-        const elevation = parseFloat(
-            (document.getElementById(eKey + '-elevation') as HTMLInputElement).value);
-        (document.getElementById(eKey + '-azimuth-label') as HTMLSpanElement).textContent = String(azimuth);
-        (document.getElementById(eKey + '-elevation-label') as HTMLSpanElement).textContent = String(elevation);
-        e[eKey].rotateSoundfield(azimuth, elevation);
-    });
+  (document.getElementById(eKey + '-gain') as HTMLInputElement).addEventListener('input', () => {
+    const gain = (document.getElementById(eKey + '-gain') as HTMLInputElement).value;
+    (document.getElementById(eKey + '-gain-label') as HTMLSpanElement).textContent = gain;
+    e[eKey].gain = gain;
+  });
+
+  (document.getElementById(eKey + '-azimuth') as HTMLInputElement).addEventListener('input', () => {
+    const azimuth = parseFloat(
+        (document.getElementById(eKey + '-azimuth') as HTMLInputElement).value);
+    const elevation = parseFloat(
+        (document.getElementById(eKey + '-elevation') as HTMLInputElement).value);
+    (document.getElementById(eKey + '-azimuth-label') as HTMLSpanElement).textContent = String(azimuth);
+    (document.getElementById(eKey + '-elevation-label') as HTMLSpanElement).textContent = String(elevation);
+    e[eKey].rotateSoundfield(azimuth, elevation);
+  });
+
+  (document.getElementById(eKey + '-elevation') as HTMLInputElement).addEventListener('input', () => {
+    const azimuth = parseFloat(
+        (document.getElementById(eKey + '-azimuth') as HTMLInputElement).value);
+    const elevation = parseFloat(
+        (document.getElementById(eKey + '-elevation') as HTMLInputElement).value);
+    (document.getElementById(eKey + '-azimuth-label') as HTMLSpanElement).textContent = String(azimuth);
+    (document.getElementById(eKey + '-elevation-label') as HTMLSpanElement).textContent = String(elevation);
+    e[eKey].rotateSoundfield(azimuth, elevation);
+  });
 
 }
 
 function secondsToReadableTime(seconds: number) {
-    let time: Date = new Date(0, 0, 0, 0, 0, 0, 0);
-    time.setSeconds(seconds)
-    let timeString = time.toISOString();
-    timeString = (seconds > 3600)
-        ? timeString.substr(11, 8)
-        : timeString.substr(14, 5)
-    timeString = (timeString.substr(0, 1) === '0') ? timeString.substring(1) : timeString
-    return String(timeString);
+  let time: Date = new Date(0, 0, 0, 0, 0, 0, 0);
+  time.setSeconds(seconds)
+  let timeString = time.toISOString();
+  timeString = (seconds > 3600)
+      ? timeString.substr(11, 8)
+      : timeString.substr(14, 5)
+  timeString = (timeString.substr(0, 1) === '0') ? timeString.substring(1) : timeString
+  return String(timeString);
 }

@@ -24,7 +24,7 @@ var e = {
 };
 var _loop_1 = function (eKey) {
     document.getElementById(eKey + '-init').addEventListener('click', function () {
-        e[eKey].initialize().then(function () {
+        e[eKey].init().then(function () {
             document.getElementById(eKey + '-init').disabled = true;
             document.getElementById(eKey + '-load').disabled = false;
         });
