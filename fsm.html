@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Parcel Sandbox</title>
   <meta charset="UTF-8"/>
+  <title>Ambisonics Player</title>
 </head>
-
 <body>
-<div id="app"></div>
+
+<div class="track__meta">
+  <div class="track__time">00:00:00</div>
+  <div class="track__artist">Artist</div>
+  <div class="track__title">Title</div>
+  <div class="track__composer">Composer</div>
+  <div class="track__member">Member</div>
+  <div class="track__uploadDate">
+    <time class="track__relativeTime" datetime="2020-05-02T05:46:40.000Z">
+      Upload Date
+    </time>
+  </div>
+  <div class="track__venue" title="Venue">
+    <a href="https://www.google.de/maps/dir/48.318441,11.5561394//@48.3184513,11.5560402,58m/data=!3m1!1e3"
+       target="_blank"><i class="fa fa-2x fa-map-marker"></i></a>
+  </div>
+  <div title="License">License</a></div>
+</div>
 
 <script src="modules/fsm.js" type="module"></script>
 
 </body>
-
 </html>
