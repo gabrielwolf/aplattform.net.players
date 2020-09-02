@@ -1,4 +1,7 @@
 import { assign, Machine } from '../node_modules/xstate/dist/xstate.web.js'
+import formatDistanceToNowStrict
+  from '../node_modules/date-fns/esm/formatDistanceToNowStrict/index.js'
+import parseISO from '../node_modules/date-fns/esm/parseISO/index.js'
 
 const baseURL = 'http://127.0.0.1:5000/'
 const fetchTrackMeta = () => fetch(baseURL).
@@ -65,7 +68,8 @@ export default Machine(
           setAttribute('datetime', context.trackMeta.uploadTime)
         document.querySelector(
           '.track__upload').
-          innerText = context.trackMeta.uploadTime
+          innerText = formatDistanceToNowStrict(
+          parseISO(context.trackMeta.uploadTime))
         document.querySelector(
           '.track__venue a').
           setAttribute('href', context.trackMeta.venue)
