@@ -7,8 +7,14 @@ const baseURL = 'http://127.0.0.1:5000/'
 const fetchTrackMeta = () => fetch(baseURL).
   then((response) => response.json())
 
+const MAX_RETRIES = 3
+
 const limitRetries = (context) => {
-  return context.metaRetries <= 3
+  return context.metaRetries <= MAX_RETRIES
+}
+
+const errorRetries = (context) => {
+  return context.metaRetries > MAX_RETRIES
 }
 
 export default Machine(
@@ -43,10 +49,12 @@ export default Machine(
           assign({
             metaRetries: (context) => context.metaRetries + 1,
           }),
-          'resetTrackMeta',
-          // TODO display some message and tell user
         ],
         after: {
+          1: {
+            target: 'error',
+            cond: errorRetries,
+          },
           3000: {
             target: 'loading',
             cond: limitRetries,
@@ -54,7 +62,17 @@ export default Machine(
         },
       },
       trackMetaLoaded: {
-        entry: ['updateTrackMeta'],
+        entry: [
+          'updateTrackMeta',
+          assign({
+            metaRetries: 0,
+          }),
+        ],
+      },
+      error: {
+        entry: () => console.log('Network Error! Please check your' +
+          ' connection and reload.'),
+        type: 'final',
       },
     },
   },
@@ -100,8 +118,7 @@ export default Machine(
           setAttribute('datetime', '1970-01-01T00:00:00.000Z')
         document.querySelector(
           '.track__upload').
-          innerText = formatDistanceToNowStrict(
-          parseISO('1970-01-01T00:00:00.000Z'))
+          innerText = 'Upload Time'
         document.querySelector(
           '.track__venue a').
           setAttribute('href', '#')
