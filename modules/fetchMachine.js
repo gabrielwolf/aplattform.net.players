@@ -7,6 +7,10 @@ const baseURL = 'http://127.0.0.1:5000/'
 const fetchTrackMeta = () => fetch(baseURL).
   then((response) => response.json())
 
+const limitRetries = (context) => {
+  return context.metaRetries <= 3
+}
+
 export default Machine(
   {
     id: 'fetchMachine',
@@ -35,13 +39,17 @@ export default Machine(
         },
       },
       failure: {
-        on: {
-          RETRY: {
+        entry: [
+          assign({
+            metaRetries: (context) => context.metaRetries + 1,
+          }),
+          'resetTrackMeta',
+          // TODO display some message and tell user
+        ],
+        after: {
+          3000: {
             target: 'loading',
-            actions:
-              assign({
-                metaRetries: (context) => context.metaRetries + 1,
-              }),
+            cond: limitRetries,
           },
         },
       },
@@ -75,6 +83,30 @@ export default Machine(
           setAttribute('href', context.trackMeta.venue)
         document.querySelector(
           '.track__license').innerText = context.trackMeta.license
+      }),
+      resetTrackMeta: (context => {
+        document.querySelector(
+          '.track__time').innerText = '00:00:00'
+        document.querySelector(
+          '.track__artist').innerText = 'Artist'
+        document.querySelector(
+          '.track__title').innerText = 'Title'
+        document.querySelector(
+          '.track__composer').innerText = 'Composer'
+        document.querySelector(
+          '.track__member').innerText = 'Member'
+        document.querySelector(
+          '.track__upload').
+          setAttribute('datetime', '1970-01-01T00:00:00.000Z')
+        document.querySelector(
+          '.track__upload').
+          innerText = formatDistanceToNowStrict(
+          parseISO('1970-01-01T00:00:00.000Z'))
+        document.querySelector(
+          '.track__venue a').
+          setAttribute('href', '#')
+        document.querySelector(
+          '.track__license').innerText = 'License'
       }),
     },
   },
