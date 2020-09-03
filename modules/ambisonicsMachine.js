@@ -97,11 +97,14 @@ const trackMetaLoaded = {
           onDone: {
             target: 'audioWired',
           },
-          onError: 'failure',
+          onError: 'error',
         },
       },
+      error: {
+        entry: () => console.log('Initialisation Error! Please check log.'),
+        type: 'final',
+      },
       audioWired: {},
-      failure: {},
     },
   },
 }
