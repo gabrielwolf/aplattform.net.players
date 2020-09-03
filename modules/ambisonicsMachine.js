@@ -57,6 +57,47 @@ const fetchTrackMetaMachine = {
   },
 }
 
+const trackReady = {
+  trackReady: {
+    type: 'parallel',
+    states: {
+      playback: {
+        initial: 'paused',
+        states: {
+          paused: {
+            entry: () => {
+              document.querySelector(
+                '.controls__play-pause').disabled = false
+              document.querySelector(
+                '.controls__play-pause').innerText = 'Play'
+            },
+            on: {
+              PLAY_PAUSE: {
+                target: 'playing',
+              },
+            },
+          },
+          playing: {
+            entry: () => {
+              document.querySelector(
+                '.controls__play-pause').innerText = 'Pause'
+            },
+            on: {
+              PLAY_PAUSE: {
+                target: 'paused',
+              },
+            },
+          },
+          ended: {},
+        },
+      },
+      looping: {},
+      gain: {},
+      rotation: {},
+    },
+  },
+}
+
 const trackMetaLoaded = {
   trackMetaLoaded: {
     entry: [
@@ -106,7 +147,7 @@ const trackMetaLoaded = {
         entry: () => console.log('Error! Please check log.'),
         type: 'final',
       },
-      trackReady: {},
+      ...trackReady,
     },
   },
 }
