@@ -15,11 +15,7 @@ const fetchTrackMeta = () => fetch(baseURL).
 
 const MAX_RETRIES = 3
 
-const limitRetries = (context) => {
-  return context.metaRetries <= MAX_RETRIES
-}
-
-const errorRetries = (context) => {
+const maxRetriesReached = (context) => {
   return context.metaRetries > MAX_RETRIES
 }
 
@@ -51,23 +47,14 @@ const fetchMachine = {
     after: {
       1: {
         target: 'error',
-        cond: errorRetries,
+        cond: maxRetriesReached,
       },
       3000: {
         target: 'loading',
-        cond: limitRetries,
+        cond: !maxRetriesReached,
       },
     },
   },
-}
-
-const instantiatePlayer = (context) => {
-  return new OmnitonePlayer(context.trackMeta.src,
-    context.trackMeta.order, context.trackMeta.channelMap)
-}
-
-const initializeAmbisonics = (context) => {
-  return context.track.initialize()
 }
 
 const trackMetaLoaded = {
@@ -85,7 +72,8 @@ const trackMetaLoaded = {
           INSTANTIATE_PLAYER: {
             target: 'playerInstantiated',
             actions: assign({
-              track: (context) => instantiatePlayer(context),
+              track: (context) => new OmnitonePlayer(context.trackMeta.src,
+                context.trackMeta.order, context.trackMeta.channelMap),
             }),
           },
         },
@@ -93,18 +81,32 @@ const trackMetaLoaded = {
       playerInstantiated: {
         invoke: {
           id: 'initializeAmbisonics',
-          src: initializeAmbisonics,
+          src: (context) => context.track.initialize(),
           onDone: {
             target: 'audioWired',
           },
-          onError: 'error',
+          onError: 'errorInitialisation',
         },
       },
-      error: {
+      errorInitialisation: {
         entry: () => console.log('Initialisation Error! Please check log.'),
         type: 'final',
       },
-      audioWired: {},
+      audioWired: {
+        invoke: {
+          id: 'loadTrack',
+          src: (context) => context.track.load(),
+          onDone: {
+            target: 'trackReady',
+          },
+          onError: 'errorLoadTrack',
+        },
+      },
+      errorLoadTrack: {
+        entry: () => console.log('Error! Please check log.'),
+        type: 'final',
+      },
+      trackReady: {},
     },
   },
 }
