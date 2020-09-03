@@ -1,7 +1,7 @@
 import { interpret } from '../node_modules/xstate/dist/xstate.web.js'
-import fetchMachine from './fetchMachine.js'
+import ambisonicsMachine from './ambisonicsMachine.js'
 
-window.service = interpret(fetchMachine).onTransition(state => {
+window.service = interpret(ambisonicsMachine).onTransition(state => {
   console.log(state.value)
 })
 

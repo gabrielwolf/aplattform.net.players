@@ -2,8 +2,10 @@ import { assign, Machine } from '../node_modules/xstate/dist/xstate.web.js'
 import formatDistanceToNowStrict
   from '../node_modules/date-fns/esm/formatDistanceToNowStrict/index.js'
 import parseISO from '../node_modules/date-fns/esm/parseISO/index.js'
+import OmnitonePlayer from './omnitonePlayer.js'
 
 const baseURL = 'http://127.0.0.1:5000/'
+
 const fetchTrackMeta = () => fetch(baseURL).
   then((response) => response.json())
 
@@ -17,63 +19,81 @@ const errorRetries = (context) => {
   return context.metaRetries > MAX_RETRIES
 }
 
+const fetchMachine = {
+  idle: {
+    on: {
+      FETCH_TRACK_META: 'loading',
+    },
+  },
+  loading: {
+    invoke: {
+      id: 'fetchTrackMeta',
+      src: fetchTrackMeta,
+      onDone: {
+        target: 'trackMetaLoaded',
+        actions: assign({
+          trackMeta: (context, event) => event.data,
+        }),
+      },
+      onError: 'failure',
+    },
+  },
+  failure: {
+    entry: [
+      assign({
+        metaRetries: (context) => context.metaRetries + 1,
+      }),
+    ],
+    after: {
+      1: {
+        target: 'error',
+        cond: errorRetries,
+      },
+      3000: {
+        target: 'loading',
+        cond: limitRetries,
+      },
+    },
+  },
+}
+
+const trackMetaLoaded = {
+  trackMetaLoaded: {
+    entry: [
+      assign({ metaRetries: 0 }),
+      'updateTrackMeta',
+    ],
+    exit: 'clearTrackMeta',
+    initial: 'playerInstantiated',
+    states: {
+      playerInstantiated: {
+        entry: [
+          assign({
+            track: (context) => new OmnitonePlayer(context.trackMeta.src,
+              context.trackMeta.order, context.trackMeta.channelMap),
+          }),
+        ],
+      },
+    },
+  },
+}
+
 export default Machine(
   {
-    id: 'fetchMachine',
+    id: 'ambisonicsMachine',
     initial: 'idle',
     context: {
       trackMeta: null,
+      track: null,
       metaRetries: 0,
     },
     states: {
-      idle: {
-        on: {
-          FETCH_TRACK_META: 'loading',
-        },
-      },
-      loading: {
-        invoke: {
-          id: 'fetchTrackMeta',
-          src: fetchTrackMeta,
-          onDone: {
-            target: 'trackMetaLoaded',
-            actions: assign({
-              trackMeta: (context, event) => event.data,
-            }),
-          },
-          onError: 'failure',
-        },
-      },
-      failure: {
-        entry: [
-          assign({
-            metaRetries: (context) => context.metaRetries + 1,
-          }),
-        ],
-        after: {
-          1: {
-            target: 'error',
-            cond: errorRetries,
-          },
-          3000: {
-            target: 'loading',
-            cond: limitRetries,
-          },
-        },
-      },
-      trackMetaLoaded: {
-        entry: [
-          'updateTrackMeta',
-          assign({
-            metaRetries: 0,
-          }),
-        ],
-      },
+      ...fetchMachine,
       error: {
-        entry: () => console.log('Network Error! Please check your' +
-          ' connection and reload.'),
+        entry: () => console.log('Network Error! Please reload.'),
         type: 'final',
       },
+      ...trackMetaLoaded,
     },
   },
   {
@@ -102,7 +122,7 @@ export default Machine(
         document.querySelector(
           '.track__license').innerText = context.trackMeta.license
       }),
-      resetTrackMeta: (context => {
+      clearTrackMeta: () => {
         document.querySelector(
           '.track__time').innerText = '00:00:00'
         document.querySelector(
@@ -124,7 +144,7 @@ export default Machine(
           setAttribute('href', '#')
         document.querySelector(
           '.track__license').innerText = 'License'
-      }),
+      },
     },
   },
 )
