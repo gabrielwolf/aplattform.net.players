@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import OmnitonePlayer from './modules/omnitonePlayer.js'
+import { secondsToReadableTime } from './modules/helpers.js'
 
 const e = {
   // First order FuMa example
@@ -140,15 +141,4 @@ for (const eKey in e) {
       e[eKey].rotateSoundfield(azimuth, elevation)
     })
 
-}
-
-function secondsToReadableTime (seconds) {
-  let time = new Date(null)
-  time.setSeconds(seconds)
-  time = time.toISOString()
-  time = (seconds > 3600)
-    ? time.substr(11, 8)
-    : time.substr(14, 5)
-  time = (time.substr(0, 1) === '0') ? time.substring(1) : time
-  return String(time)
 }

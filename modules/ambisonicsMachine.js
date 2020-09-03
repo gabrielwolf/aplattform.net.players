@@ -7,6 +7,7 @@ import formatDistanceToNowStrict
   from '../node_modules/date-fns/esm/formatDistanceToNowStrict/index.js'
 import parseISO from '../node_modules/date-fns/esm/parseISO/index.js'
 import OmnitonePlayer from './omnitonePlayer.js'
+import { secondsToReadableTime } from './helpers.js'
 
 const baseURL = 'http://127.0.0.1:5000/'
 
@@ -19,7 +20,7 @@ const maxRetriesReached = (context) => {
   return context.metaRetries > MAX_RETRIES
 }
 
-const fetchTrackMetaMachine = {
+const getTrackMeta = {
   idle: {
     on: {
       FETCH_TRACK_META: 'loading',
@@ -89,6 +90,9 @@ const trackReady = {
               PLAY_PAUSE: {
                 target: 'paused',
                 actions: (context) => context.track.stop(),
+              },
+              TIMING: {
+                target: 'playing',
               },
             },
           },
@@ -173,7 +177,7 @@ export default Machine(
       metaRetries: 0,
     },
     states: {
-      ...fetchTrackMetaMachine,
+      ...getTrackMeta,
       ...errorTrackMeta,
       ...trackMetaLoaded,
     },
@@ -182,7 +186,8 @@ export default Machine(
     actions: {
       updateTrackMeta: (context => {
         document.querySelector(
-          '.track__time').innerText = context.trackMeta.time
+          '.track__duration').innerText = secondsToReadableTime(
+          context.trackMeta.durationInSeconds)
         document.querySelector(
           '.track__artist').innerText = context.trackMeta.artist
         document.querySelector(
