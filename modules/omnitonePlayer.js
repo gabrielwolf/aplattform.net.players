@@ -32,6 +32,12 @@ export default class OmnitonePlayer {
     return this._elapsedTimeInMilliSeconds / 1000
   }
 
+  get elapsedPercentage () {
+    return (this.durationInSeconds === 0)
+      ? 0
+      : (this._elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds
+  }
+
   get durationInSeconds () {
     return this._durationInSeconds
   }

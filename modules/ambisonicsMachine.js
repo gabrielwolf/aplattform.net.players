@@ -74,6 +74,9 @@ const trackReady = {
             on: {
               PLAY_PAUSE: {
                 target: 'playing',
+                actions: (context) => context.track.play(
+                  context.track.elapsedPercentage,
+                ),
               },
             },
           },
@@ -85,6 +88,7 @@ const trackReady = {
             on: {
               PLAY_PAUSE: {
                 target: 'paused',
+                actions: (context) => context.track.stop(),
               },
             },
           },
