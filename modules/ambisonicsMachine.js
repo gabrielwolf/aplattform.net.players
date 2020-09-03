@@ -19,7 +19,7 @@ const maxRetriesReached = (context) => {
   return context.metaRetries > MAX_RETRIES
 }
 
-const fetchMachine = {
+const fetchTrackMetaMachine = {
   idle: {
     on: {
       FETCH_TRACK_META: 'loading',
@@ -46,7 +46,7 @@ const fetchMachine = {
     ],
     after: {
       1: {
-        target: 'error',
+        target: 'errorTrackMeta',
         cond: maxRetriesReached,
       },
       3000: {
@@ -111,6 +111,13 @@ const trackMetaLoaded = {
   },
 }
 
+const errorTrackMeta = {
+  errorTrackMeta: {
+    entry: () => console.log('Network Error! Please reload.'),
+    type: 'final',
+  },
+}
+
 export default Machine(
   {
     id: 'ambisonicsMachine',
@@ -121,11 +128,8 @@ export default Machine(
       metaRetries: 0,
     },
     states: {
-      ...fetchMachine,
-      error: {
-        entry: () => console.log('Network Error! Please reload.'),
-        type: 'final',
-      },
+      ...fetchTrackMetaMachine,
+      ...errorTrackMeta,
       ...trackMetaLoaded,
     },
   },
