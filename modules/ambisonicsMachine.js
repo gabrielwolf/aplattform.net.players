@@ -1,4 +1,8 @@
-import { assign, Machine } from '../node_modules/xstate/dist/xstate.web.js'
+import {
+  assign,
+  Machine,
+  send,
+} from '../node_modules/xstate/dist/xstate.web.js'
 import formatDistanceToNowStrict
   from '../node_modules/date-fns/esm/formatDistanceToNowStrict/index.js'
 import parseISO from '../node_modules/date-fns/esm/parseISO/index.js'
@@ -57,6 +61,15 @@ const fetchMachine = {
   },
 }
 
+const instantiatePlayer = (context) => {
+  return new OmnitonePlayer(context.trackMeta.src,
+    context.trackMeta.order, context.trackMeta.channelMap)
+}
+
+const initializeAmbisonics = (context) => {
+  return context.track.initialize()
+}
+
 const trackMetaLoaded = {
   trackMetaLoaded: {
     entry: [
@@ -64,16 +77,31 @@ const trackMetaLoaded = {
       'updateTrackMeta',
     ],
     exit: 'clearTrackMeta',
-    initial: 'playerInstantiated',
+    initial: 'idle',
     states: {
-      playerInstantiated: {
-        entry: [
-          assign({
-            track: (context) => new OmnitonePlayer(context.trackMeta.src,
-              context.trackMeta.order, context.trackMeta.channelMap),
-          }),
-        ],
+      idle: {
+        entry: send('INSTANTIATE_PLAYER'),
+        on: {
+          INSTANTIATE_PLAYER: {
+            target: 'playerInstantiated',
+            actions: assign({
+              track: (context) => instantiatePlayer(context),
+            }),
+          },
+        },
       },
+      playerInstantiated: {
+        invoke: {
+          id: 'initializeAmbisonics',
+          src: initializeAmbisonics,
+          onDone: {
+            target: 'audioWired',
+          },
+          onError: 'failure',
+        },
+      },
+      audioWired: {},
+      failure: {},
     },
   },
 }
