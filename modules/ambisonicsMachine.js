@@ -116,10 +116,10 @@ const trackMetaLoaded = {
     initial: 'idle',
     states: {
       idle: {
-        entry: send('INSTANTIATE_PLAYER'),
+        entry: send('INSTANTIATE_TRACK'),
         on: {
-          INSTANTIATE_PLAYER: {
-            target: 'playerInstantiated',
+          INSTANTIATE_TRACK: {
+            target: 'trackInstantiated',
             actions: assign({
               track: (context) => new OmnitonePlayer(context.trackMeta.src,
                 context.trackMeta.order, context.trackMeta.channelMap),
@@ -127,7 +127,7 @@ const trackMetaLoaded = {
           },
         },
       },
-      playerInstantiated: {
+      trackInstantiated: {
         invoke: {
           id: 'initializeAmbisonics',
           src: (context) => context.track.initialize(),
