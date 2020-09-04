@@ -93,6 +93,12 @@ const trackReady = {
               },
               TIMING: {
                 target: 'playing',
+                actions: (context) => {
+                  document.querySelector(
+                    '.track__elapsed-time').innerText = secondsToReadableTime(
+                    context.track.elapsedTimeInSeconds,
+                  )
+                },
               },
             },
           },

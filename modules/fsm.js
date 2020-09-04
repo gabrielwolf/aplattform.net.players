@@ -9,3 +9,5 @@ service.send('FETCH_TRACK_META')
 
 document.querySelector('.controls__play-pause').
   addEventListener('click', () => { service.send('PLAY_PAUSE') })
+
+setInterval(() => service.send('TIMING'), 1000)
