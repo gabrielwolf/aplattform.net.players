@@ -217,7 +217,7 @@ export default Machine(
       }),
       clearTrackMeta: () => {
         document.querySelector(
-          '.track__time').innerText = '00:00:00'
+          '.track__time').innerText = '0:00'
         document.querySelector(
           '.track__artist').innerText = 'Artist'
         document.querySelector(
