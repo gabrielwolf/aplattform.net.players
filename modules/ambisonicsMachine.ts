@@ -1,16 +1,12 @@
 import { secondsToReadableTime } from './helpers';
-import { assign, Machine, send } from 'xstate/lib';
+import { AnyEventObject, assign, Machine, send, StateMachine } from 'xstate/es';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import parseISO from 'date-fns/parseISO';
 import OmnitonePlayer from './omnitonePlayer.js';
 
-
 const baseURL = 'http://127.0.0.1:5000/';
-
 const fetchTrackMeta = () => fetch(baseURL).then((response) => response.json());
-
 const MAX_RETRIES = 3;
-
 const maxRetriesReached = (context: { metaRetries: number }) => context.metaRetries > MAX_RETRIES;
 
 const getTrackMeta = {
@@ -160,7 +156,8 @@ const errorTrackMeta = {
   },
 };
 
-export default Machine(
+let ambisonicsMachine: StateMachine<any, any, AnyEventObject>;
+ambisonicsMachine = Machine(
     {
       id: 'ambisonicsMachine',
       initial: 'idle',
@@ -202,3 +199,4 @@ export default Machine(
       },
     },
 );
+export default ambisonicsMachine;

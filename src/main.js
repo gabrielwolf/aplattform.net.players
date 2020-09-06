@@ -13,8 +13,8 @@
 //
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import OmnitonePlayer from './modules/omnitonePlayer.js';
-import { secondsToReadableTime } from "./modules/helpers.js";
+import OmnitonePlayer from '../modules/omnitonePlayer.js';
+import { secondsToReadableTime } from "../modules/helpers.js";
 var e = {
     // First order FuMa example
     foa: new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2]),

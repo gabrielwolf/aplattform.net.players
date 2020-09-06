@@ -1,7 +1,15 @@
 {
+  "scripts": {
+    "dev": "es-dev-server --watch --node-resolve | npm run watch",
+    "watch": "browser-sync start -f src/ --proxy localhost:8000 --startPath ./"
+  },
   "dependencies": {
     "date-fns": "^2.16.1",
     "omnitone": "^1.3.0",
     "xstate": "^4.13.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.12",
+    "es-dev-server": "^1.57.4"
   }
 }

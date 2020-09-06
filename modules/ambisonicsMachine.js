@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { secondsToReadableTime } from './helpers';
-import { assign, Machine, send } from 'xstate/lib';
+import { assign, Machine, send } from 'xstate/es';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import parseISO from 'date-fns/parseISO';
 import OmnitonePlayer from './omnitonePlayer.js';
@@ -154,7 +154,8 @@ var errorTrackMeta = {
         type: 'final',
     },
 };
-export default Machine({
+var ambisonicsMachine;
+ambisonicsMachine = Machine({
     id: 'ambisonicsMachine',
     initial: 'idle',
     context: {
@@ -189,3 +190,4 @@ export default Machine({
         },
     },
 });
+export default ambisonicsMachine;

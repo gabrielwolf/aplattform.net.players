@@ -116,7 +116,7 @@ aside.todo > div > ol {
 aside.ambisonics-logo {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
-    background: url("images/ambisonics-logo.svg") no-repeat center center;
+    background: url("../images/ambisonics-logo.svg") no-repeat center center;
     background-size: contain;
     opacity: 0.707;
     margin: 4rem;

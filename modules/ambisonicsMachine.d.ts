@@ -1,5 +1,3 @@
-declare const _default: import("xstate").StateMachine<any, any, import("xstate").AnyEventObject, {
-    value: any;
-    context: any;
-}>;
-export default _default;
+import { AnyEventObject, StateMachine } from 'xstate/es';
+declare let ambisonicsMachine: StateMachine<any, any, AnyEventObject>;
+export default ambisonicsMachine;

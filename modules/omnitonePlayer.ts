@@ -26,7 +26,7 @@ export default class OmnitonePlayer {
   private _playedFromPosition: number;
   private _elapsedTimeInMilliSeconds: number;
   private _offset: number;
-  private _calcElapsedHandler: number;
+  private _calcElapsedHandler: any;
 
   private _audioContext: any;
   private _inputGain: any;
@@ -230,8 +230,8 @@ export default class OmnitonePlayer {
     this._playedFromPosition = from;
     if (this._calcElapsedHandler)
       clearInterval(this._calcElapsedHandler);
-    this._calcElapsedHandler = setInterval(() => this.updateElapsedTimeInMilliSeconds(), 10)
-    this._currentBufferSource.start(0, from * this._durationInSeconds)
+    this._calcElapsedHandler = setInterval(() => this.updateElapsedTimeInMilliSeconds(), 10);
+    this._currentBufferSource.start(0, from * this._durationInSeconds);
     if (this._order === 1)
       console.log('FOAPlayer playing...');
     else if (this._order === 2 || this._order === 3)
