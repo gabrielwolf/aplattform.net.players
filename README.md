@@ -10,4 +10,3 @@ TODO
 
 1. JSAmbisonics implementation
 2. Listening tests
-3. Seeking
