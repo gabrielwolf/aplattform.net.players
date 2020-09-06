@@ -23,9 +23,9 @@ var e = {
     toa: new OmnitonePlayer('sounds/toa.flac', 3, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 };
 var _loop_1 = function (eKey) {
-    document.getElementById(eKey + '-init').addEventListener('click', function () {
-        e[eKey].init().then(function () {
-            document.getElementById(eKey + '-init').disabled = true;
+    document.getElementById(eKey + '-initialize').addEventListener('click', function () {
+        e[eKey].initialize().then(function () {
+            document.getElementById(eKey + '-initialize').disabled = true;
             document.getElementById(eKey + '-load').disabled = false;
         });
     });

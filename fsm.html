@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Ambisonics Player</title>
+</head>
+<body>
+
+<div class="controls">
+  <button class="controls__play-pause" disabled>Play</button>
+</div>
+<div class="track">
+  <div class="track__elapsed-time" style="display: inline-block">0:00</div>
+  /
+  <div class="track__duration" style="display: inline-block">0:00</div>
+  <div class="track__artist">Artist</div>
+  <div class="track__title">Title</div>
+  <div class="track__composer">Composer</div>
+  <div class="track__member">Member</div>
+  <time class="track__upload" datetime="1970-01-01T00:00:00.000Z">
+    Upload Time
+  </time>
+  <div class="track__venue">
+    <a href="#" target="_blank">Venue</a>
+  </div>
+  <div class="track__license">License</a></div>
+</div>
+
+<script src="modules/ambisonicsMachine.js" type="module"></script>
+<script defer src="modules/fsm.js" type="module"></script>
+
+</body>
+</html>

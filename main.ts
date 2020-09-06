@@ -34,9 +34,9 @@ const e: {
 
 for (const eKey in e) {
 
-  (document.getElementById(eKey + '-init') as HTMLButtonElement).addEventListener('click', () => {
-    e[eKey].init().then(() => {
-      (document.getElementById(eKey + '-init') as HTMLButtonElement).disabled = true;
+  (document.getElementById(eKey + '-initialize') as HTMLButtonElement).addEventListener('click', () => {
+    e[eKey].initialize().then(() => {
+      (document.getElementById(eKey + '-initialize') as HTMLButtonElement).disabled = true;
       (document.getElementById(eKey + '-load') as HTMLButtonElement).disabled = false;
     })
   });

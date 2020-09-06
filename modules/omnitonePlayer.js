@@ -53,21 +53,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import Omnitone from '../node_modules/omnitone/build/omnitone.esm.js';
 var OmnitonePlayer = /** @class */ (function () {
     function OmnitonePlayer(src, order, channelMap) {
-        var _this = this;
-        this.finalizeLoading = function () {
-            _this.rotateSoundfield(0, 0);
-            _this._durationInSeconds = _this._contentBuffer.length /
-                _this._contentBuffer.sampleRate;
-        };
-        this.clearCurrentBufferSource = function () {
-            _this._currentBufferSource.stop();
-            _this._currentBufferSource.disconnect();
-        };
-        this.updateElapsedTimeInMilliSeconds = function () {
-            _this._offset = _this._playedFromPosition * _this._durationInSeconds * 1000;
-            _this._elapsedTimeInMilliSeconds = Date.now() -
-                _this._playbackStartedAtTimeInMilliseconds + _this._offset;
-        };
         this._src = src;
         this._order = order;
         this._channelMap = channelMap;
@@ -92,6 +77,15 @@ var OmnitonePlayer = /** @class */ (function () {
     Object.defineProperty(OmnitonePlayer.prototype, "durationInSeconds", {
         get: function () {
             return this._durationInSeconds;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(OmnitonePlayer.prototype, "elapsedPercentage", {
+        get: function () {
+            return (this.durationInSeconds === 0)
+                ? 0
+                : (this._elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds;
         },
         enumerable: false,
         configurable: true
@@ -172,8 +166,22 @@ var OmnitonePlayer = /** @class */ (function () {
         rotationMatrix3[8] = forward[2];
         this._ambisonicsRenderer.setRotationMatrix3(rotationMatrix3);
     };
+    OmnitonePlayer.prototype.finalizeLoading = function () {
+        this.rotateSoundfield(0, 0);
+        this._durationInSeconds = this._contentBuffer.length /
+            this._contentBuffer.sampleRate;
+    };
+    OmnitonePlayer.prototype.clearCurrentBufferSource = function () {
+        this._currentBufferSource.stop();
+        this._currentBufferSource.disconnect();
+    };
+    OmnitonePlayer.prototype.updateElapsedTimeInMilliSeconds = function () {
+        this._offset = this._playedFromPosition * this._durationInSeconds * 1000;
+        this._elapsedTimeInMilliSeconds = Date.now() -
+            this._playbackStartedAtTimeInMilliseconds + this._offset;
+    };
     // ---------------- Main functions ----------------
-    OmnitonePlayer.prototype.init = function () {
+    OmnitonePlayer.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {

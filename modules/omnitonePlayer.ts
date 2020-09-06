@@ -49,21 +49,27 @@ export default class OmnitonePlayer {
 
   private _loop: boolean
 
-  get loop() {
+  get loop(): boolean {
     return this._loop
   }
 
-  set loop(value) {
+  set loop(value: boolean) {
     this._loop = value
   }
 
   private _durationInSeconds: number
 
-  get durationInSeconds() {
+  get durationInSeconds(): number {
     return this._durationInSeconds
   }
 
-  get elapsedTimeInSeconds() {
+  get elapsedPercentage(): number {
+    return (this.durationInSeconds === 0)
+        ? 0
+        : (this._elapsedTimeInMilliSeconds / 1000) / this.durationInSeconds
+  }
+
+  get elapsedTimeInSeconds(): number {
     return this._elapsedTimeInMilliSeconds / 1000
   }
 
@@ -155,18 +161,18 @@ export default class OmnitonePlayer {
     this._ambisonicsRenderer.setRotationMatrix3(rotationMatrix3)
   }
 
-  finalizeLoading = () => {
+  finalizeLoading() {
     this.rotateSoundfield(0, 0)
     this._durationInSeconds = this._contentBuffer.length /
         this._contentBuffer.sampleRate
   }
 
-  clearCurrentBufferSource = () => {
+  clearCurrentBufferSource() {
     this._currentBufferSource.stop()
     this._currentBufferSource.disconnect()
   }
 
-  updateElapsedTimeInMilliSeconds = () => {
+  updateElapsedTimeInMilliSeconds() {
     this._offset = this._playedFromPosition * this._durationInSeconds * 1000
     this._elapsedTimeInMilliSeconds = Date.now() -
         this._playbackStartedAtTimeInMilliseconds + this._offset
@@ -174,7 +180,7 @@ export default class OmnitonePlayer {
 
   // ---------------- Main functions ----------------
 
-  async init() {
+  async initialize() {
     this._audioContext = new AudioContext()
     this._inputGain = this._audioContext.createGain()
     if (this._order === 1) {
