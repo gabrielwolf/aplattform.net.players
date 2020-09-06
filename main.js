@@ -14,6 +14,7 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import OmnitonePlayer from './modules/omnitonePlayer.js';
+import { secondsToReadableTime } from "./modules/helpers";
 var e = {
     // First order FuMa example
     foa: new OmnitonePlayer('sounds/foa.flac', 1, [0, 3, 1, 2]),
@@ -92,14 +93,4 @@ var _loop_1 = function (eKey) {
 };
 for (var eKey in e) {
     _loop_1(eKey);
-}
-function secondsToReadableTime(seconds) {
-    var time = new Date(0, 0, 0, 0, 0, 0, 0);
-    time.setSeconds(seconds);
-    var timeString = time.toISOString();
-    timeString = (seconds > 3600)
-        ? timeString.substr(11, 8)
-        : timeString.substr(14, 5);
-    timeString = (timeString.substr(0, 1) === '0') ? timeString.substring(1) : timeString;
-    return String(timeString);
 }

@@ -1,0 +1,36 @@
+export default class OmnitonePlayer {
+    private readonly _src;
+    private readonly _order;
+    private readonly _channelMap;
+    private _playbackStartedAtTimeInMilliseconds;
+    private _playedFromPosition;
+    private _elapsedTimeInMilliSeconds;
+    private _offset;
+    private _calcElapsedHandler;
+    private _audioContext;
+    private _inputGain;
+    private _contentBuffer;
+    private _ambisonicsRenderer;
+    private _currentBufferSource;
+    constructor(src: string, order: number, channelMap: number[]);
+    private _loop;
+    get loop(): boolean;
+    set loop(value: boolean);
+    private _durationInSeconds;
+    get durationInSeconds(): number;
+    get elapsedPercentage(): number;
+    get elapsedTimeInSeconds(): number;
+    set gain(gain: string);
+    static crossProduct(a: number[], b: number[]): number[];
+    static getListOfFileNames(src: string, order: number): string[];
+    static normalize(a: number[]): number[];
+    rotateSoundfield(azimuth: number, elevation: number): void;
+    finalizeLoading(): void;
+    clearCurrentBufferSource(): void;
+    updateElapsedTimeInMilliSeconds(): void;
+    initialize(): Promise<void>;
+    load(): Promise<void>;
+    play(from: number): void;
+    stop(): void;
+    resume(): void;
+}
