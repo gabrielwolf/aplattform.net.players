@@ -1,10 +1,10 @@
-export function secondsToReadableTime (seconds) {
-  let time = new Date(null)
-  time.setSeconds(seconds)
-  time = time.toISOString()
-  time = (seconds > 3600)
-    ? time.substr(11, 8)
-    : time.substr(14, 5)
-  time = (time.substr(0, 1) === '0') ? time.substring(1) : time
-  return String(time)
-}
+export var secondsToReadableTime = function (seconds) {
+    var date = new Date(0, 0, 0, 0, 0, 0, 0);
+    date.setSeconds(seconds);
+    var readableTime = date.toISOString();
+    readableTime = seconds > 3600
+        ? readableTime.substr(11, 8)
+        : readableTime.substr(14, 5);
+    readableTime = readableTime.substr(0, 1) === '0' ? readableTime.substring(1) : readableTime;
+    return readableTime;
+};
