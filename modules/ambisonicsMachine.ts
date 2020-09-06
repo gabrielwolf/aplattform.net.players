@@ -5,13 +5,13 @@ import parseISO from 'date-fns/parseISO';
 import OmnitonePlayer from './omnitonePlayer.js';
 
 
-const baseURL = 'http://127.0.0.1:5000/'
+const baseURL = 'http://127.0.0.1:5000/';
 
-const fetchTrackMeta = () => fetch(baseURL).then((response) => response.json())
+const fetchTrackMeta = () => fetch(baseURL).then((response) => response.json());
 
-const MAX_RETRIES = 3
+const MAX_RETRIES = 3;
 
-const maxRetriesReached = (context: { metaRetries: number }) => context.metaRetries > MAX_RETRIES
+const maxRetriesReached = (context: { metaRetries: number }) => context.metaRetries > MAX_RETRIES;
 
 const getTrackMeta = {
   idle: {
@@ -49,7 +49,7 @@ const getTrackMeta = {
       },
     },
   },
-}
+};
 
 const trackReady = {
   trackReady: {
@@ -95,7 +95,7 @@ const trackReady = {
       rotation: {},
     },
   },
-}
+};
 
 const trackMetaLoaded = {
   trackMetaLoaded: {
@@ -151,14 +151,14 @@ const trackMetaLoaded = {
       ...trackReady,
     },
   },
-}
+};
 
 const errorTrackMeta = {
   errorTrackMeta: {
     entry: () => console.log('Network Error! Please reload.'),
     type: 'final',
   },
-}
+};
 
 export default Machine(
     {
@@ -201,4 +201,4 @@ export default Machine(
         },
       },
     },
-)
+);

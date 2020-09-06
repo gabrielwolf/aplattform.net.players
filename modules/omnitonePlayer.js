@@ -168,8 +168,7 @@ var OmnitonePlayer = /** @class */ (function () {
     };
     OmnitonePlayer.prototype.finalizeLoading = function () {
         this.rotateSoundfield(0, 0);
-        this._durationInSeconds = this._contentBuffer.length /
-            this._contentBuffer.sampleRate;
+        this._durationInSeconds = this._contentBuffer.length / this._contentBuffer.sampleRate;
     };
     OmnitonePlayer.prototype.clearCurrentBufferSource = function () {
         this._currentBufferSource.stop();
@@ -177,8 +176,7 @@ var OmnitonePlayer = /** @class */ (function () {
     };
     OmnitonePlayer.prototype.updateElapsedTimeInMilliSeconds = function () {
         this._offset = this._playedFromPosition * this._durationInSeconds * 1000;
-        this._elapsedTimeInMilliSeconds = Date.now() -
-            this._playbackStartedAtTimeInMilliseconds + this._offset;
+        this._elapsedTimeInMilliSeconds = Date.now() - this._playbackStartedAtTimeInMilliseconds + this._offset;
     };
     // ---------------- Main functions ----------------
     OmnitonePlayer.prototype.initialize = function () {
@@ -267,8 +265,7 @@ var OmnitonePlayer = /** @class */ (function () {
             console.log('HOAPlayer playing...');
         this._currentBufferSource.onended = function () {
             var lastChanceToStopBeforeEndOfSongInSeconds = 1;
-            if (Math.abs(_this._durationInSeconds - _this.elapsedTimeInSeconds) <
-                lastChanceToStopBeforeEndOfSongInSeconds) {
+            if (Math.abs(_this._durationInSeconds - _this.elapsedTimeInSeconds) < lastChanceToStopBeforeEndOfSongInSeconds) {
                 clearInterval(_this._calcElapsedHandler);
                 _this._playedFromPosition = .0;
                 _this._elapsedTimeInMilliSeconds = 0;

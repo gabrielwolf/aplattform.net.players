@@ -14,8 +14,8 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import OmnitonePlayer from './modules/omnitonePlayer.js'
-import { secondsToReadableTime } from "./modules/helpers";
+import OmnitonePlayer from './modules/omnitonePlayer.js';
+import { secondsToReadableTime } from "./modules/helpers.js";
 
 const e: {
   [index: string]: any
@@ -44,7 +44,7 @@ for (const eKey in e) {
 
   (document.getElementById(eKey + '-load') as HTMLButtonElement).addEventListener('click', () => {
     ((document.getElementById(eKey + '-load') as HTMLButtonElement) as HTMLButtonElement).disabled = true;
-    (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loading...'
+    (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loading...';
     e[eKey].load().then(() => {
       (document.getElementById(eKey + '-play') as HTMLButtonElement).disabled = false;
       (document.getElementById(eKey + '-loop') as HTMLButtonElement).disabled = false;
@@ -54,12 +54,8 @@ for (const eKey in e) {
       (document.getElementById(eKey + '-azimuth') as HTMLButtonElement).disabled = false;
       (document.getElementById(eKey + '-elevation') as HTMLButtonElement).disabled = false;
       (document.getElementById(eKey + '-load') as HTMLButtonElement).innerText = 'Loaded';
-      (document.getElementById(
-          eKey + '-duration') as HTMLButtonElement).innerText = secondsToReadableTime(
-          e[eKey].durationInSeconds,
-      );
-      (document.getElementById(
-          eKey + '-progress') as HTMLProgressElement).max = e[eKey].durationInSeconds
+      (document.getElementById(eKey + '-duration') as HTMLButtonElement).innerText = secondsToReadableTime(e[eKey].durationInSeconds);
+      (document.getElementById(eKey + '-progress') as HTMLProgressElement).max = e[eKey].durationInSeconds;
       setInterval(() => {
         (document.getElementById(
             eKey + '-progress',

@@ -1,5 +1,5 @@
 import { interpret } from 'xstate'
-import ambisonicsMachine from './ambisonicsMachine.js'
+import ambisonicsMachine from './modules/ambisonicsMachine.js'
 
 const service = interpret(ambisonicsMachine).onTransition(state => console.log(state.value));
 service.start();
